@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
+
 contract ArbitrationDAO {
     struct Dispute {
         uint256 id;
@@ -31,7 +32,7 @@ contract ArbitrationDAO {
         votes[_disputeId][msg.sender] = true;
         voteCounts[_disputeId]++;
 
-        if (voteCounts[_disputeId] > 1) { // Replace with suitable threshold
+        if (voteCounts[_disputeId] > 1) { 
             disputes[_disputeId].resolved = true;
             disputes[_disputeId].resolution = resolution;
             emit DisputeResolved(_disputeId, resolution);
