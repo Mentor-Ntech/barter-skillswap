@@ -16,4 +16,12 @@ contract CounterScript is Script {
 
         vm.stopBroadcast();
     }
+
+    function delay() public {
+        vm.startBroadcast();
+
+        counter = new Counter();
+
+        vm.stopBroadcast();
+    }
 }
