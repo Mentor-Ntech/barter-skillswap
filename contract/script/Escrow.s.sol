@@ -7,7 +7,7 @@ contract Escrow {
         uint256 agreementId;
         address depositor;
         uint256 amount;
-        uint8 status; // 0: active, 1: released, 2: reverted
+        uint8 status; // 0: active, 1: released, 2: reverted 
     }
 
     mapping(uint256 => EscrowAgreement) public escrows;
