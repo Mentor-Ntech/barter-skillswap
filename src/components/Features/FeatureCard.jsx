@@ -24,10 +24,7 @@ export const FeatureCard = ({ title, description, skills = [], imageUrl }) => {
             ))}
           </div>
           
-          <div>
-            <p> Hello my</p>
-           
-            </div>
+
         </div>
       </div>
     );
