@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { WalletButton } from '../Web3/WalletButton';
-import { DarkModeToggle } from '../UI/DarkModeToggle';
+import React, {useState} from "react";
+import { WalletButton } from "../Web3/WalletButton";
 
-export function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+export default function Navbar() {
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuItems = [
-    { label: 'Home', href: '#home' },
-    { label: 'Features', href: '#features' },
-    { label: 'Exchange', href: '#exchange' },
-    { label: 'NFT Badges', href: '#badges' }
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Services", href: "/service" },
+    { label: "Plans", href: "/plans" },
   ];
 
   return (
@@ -18,8 +18,9 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 text-transparent bg-clip-text">
-              SkillSwap
+              WELCOME TO SKILL-SWAP
             </span>
+            <p className="text-gray-600">Modern Barter System</p>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
@@ -32,7 +33,7 @@ export function Navbar() {
                 {item.label}
               </a>
             ))}
-            <DarkModeToggle />
+            {/* <DarkModeToggle /> */}
             <WalletButton />
           </div>
 
@@ -65,6 +66,20 @@ export function Navbar() {
           </div>
         </div>
       )}
+
     </nav>
+
+    // <nav className="w-full px-8 py-4 flex justify-between items-center">
+    //   <div className="flex flex-col">
+    //     <h1 className="text-2xl font-bold tracking-tight">WELCOME TO SKILL-SWAP</h1>
+    //     <p className="text-gray-600">Modern Barter System</p>
+    //   </div>
+    //   <div className="flex gap-8 items-center">
+    //     <a href="#" className="text-[#2C5282] hover:text-[#5EBFB7]">Home</a>
+    //     <a href="#" className="text-[#2C5282] hover:text-[#5EBFB7]">About</a>
+    //     <a href="#" className="text-[#2C5282] hover:text-[#5EBFB7]">Services</a>
+    //     <a href="#" className="text-[#2C5282] hover:text-[#5EBFB7]">Plans</a>
+    //   </div>
+    // </nav>
   );
 }
