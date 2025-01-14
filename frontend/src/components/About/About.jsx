@@ -14,7 +14,7 @@ export default function About() {
       </div>
       <div className="flex justify-center">
         <img 
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-13%20163618-v7JdM2OADFsWyQ86jhOlzMny0Rv15a.png" 
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOZklpqvlEW0a3JwYKVJ6NGImtINbm-V5cow&s" 
           alt="SkillSwap Concept" 
           className="w-full max-w-md"
         />
