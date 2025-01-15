@@ -55,6 +55,11 @@ export default function Contact() {
               className="w-full p-2 border border-black bg-transparent h-32"
             ></textarea>
           </div>
+
+          <div className="flex w-full bg-[black] text-white items-center justify-center px-6 py-2">
+  <button type="submit">submit</button>
+</div>
+
         </form>
       </div>
     </div>

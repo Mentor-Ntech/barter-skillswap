@@ -1,5 +1,7 @@
 import React, {useState} from "react";
-import { WalletButton } from "../Web3/WalletButton";
+ import { WalletButton } from "../Web3/WalletButton";
+ 
+
 
 
 export default function Navbar() {
@@ -34,7 +36,8 @@ export default function Navbar() {
               </a>
             ))}
             {/* <DarkModeToggle /> */}
-            <WalletButton />
+             <WalletButton /> 
+            {/* <appkit-button /> */}
           </div>
 
           <button
@@ -69,17 +72,8 @@ export default function Navbar() {
 
     </nav>
 
-    // <nav className="w-full px-8 py-4 flex justify-between items-center">
-    //   <div className="flex flex-col">
-    //     <h1 className="text-2xl font-bold tracking-tight">WELCOME TO SKILL-SWAP</h1>
-    //     <p className="text-gray-600">Modern Barter System</p>
-    //   </div>
-    //   <div className="flex gap-8 items-center">
-    //     <a href="#" className="text-[#2C5282] hover:text-[#5EBFB7]">Home</a>
-    //     <a href="#" className="text-[#2C5282] hover:text-[#5EBFB7]">About</a>
-    //     <a href="#" className="text-[#2C5282] hover:text-[#5EBFB7]">Services</a>
-    //     <a href="#" className="text-[#2C5282] hover:text-[#5EBFB7]">Plans</a>
-    //   </div>
-    // </nav>
+    
   );
 }
+
+
