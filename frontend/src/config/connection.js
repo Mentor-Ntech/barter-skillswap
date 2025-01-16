@@ -32,7 +32,7 @@ import { EthersAdapter } from "@reown/appkit-adapter-ethers";
 import { baseSepolia, sepolia } from "@reown/appkit/networks";
 
 // 1. Get projectId
-const projectId = import.meta.env.VITE_SKILL_PROJECT_ID;
+const projectId ="636fbbf256896d1aec459c53de2530f1";
 
 // 2. Set the networks
 const networks = [baseSepolia, sepolia];
@@ -52,7 +52,7 @@ createAppKit({
   metadata,
   projectId,
   themeVariables: {
-    // "--w3m-accent": "#d97706",
+    "--w3m-accent": "#d97706",
     "--w3m-border-radius-master": "1px",
   },
   features: {

@@ -35,9 +35,8 @@ export default function Navbar() {
                 {item.label}
               </a>
             ))}
-            {/* <DarkModeToggle /> */}
-             <WalletButton /> 
-            {/* <appkit-button /> */}
+          
+            <appkit-button />
           </div>
 
           <button
@@ -62,10 +61,11 @@ export default function Navbar() {
                 {item.label}
               </a>
             ))}
-            <div className="py-2 flex flex-col space-y-2">
-              <DarkModeToggle />
-              <WalletButton />
-            </div>
+          
+             <div>
+             <appkit-button />
+             </div>
+          
           </div>
         </div>
       )}
