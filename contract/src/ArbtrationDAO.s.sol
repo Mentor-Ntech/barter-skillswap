@@ -1,46 +1,3 @@
-// // SPDX-License-Identifier: MIT
-// pragma solidity ^0.8.27;
-
-
-// contract ArbitrationDAO {
-//     struct Dispute {
-//         uint256 id;
-//         uint256 listingId;
-//         address raisedBy;
-//         bool resolved;
-//         address resolution;
-//     }
-
-//     uint256 public disputeCounter;
-//     mapping(uint256 => Dispute) public disputes;
-//     mapping(uint256 => mapping(address => bool)) public votes;
-//     mapping(uint256 => uint256) public voteCounts;
-
-//     event DisputeCreated(uint256 id, uint256 listingId, address raisedBy);
-//     event DisputeResolved(uint256 id, address resolution);
-
-//     function createDispute(uint256 _listingId) external {
-//         disputeCounter++;
-//         disputes[disputeCounter] = Dispute(disputeCounter, _listingId, msg.sender, false, address(0));
-//         emit DisputeCreated(disputeCounter, _listingId, msg.sender);
-//     }
-
-//     function voteOnDispute(uint256 _disputeId, address resolution) external {
-//         require(!disputes[_disputeId].resolved, "Dispute already resolved");
-//         require(!votes[_disputeId][msg.sender], "Already voted");
-
-//         votes[_disputeId][msg.sender] = true;
-//         voteCounts[_disputeId]++;
-
-//         if (voteCounts[_disputeId] > 1) { 
-//             disputes[_disputeId].resolved = true;
-//             disputes[_disputeId].resolution = resolution;
-//             emit DisputeResolved(_disputeId, resolution);
-//         }
-//     }
-// }
-
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
@@ -50,14 +7,14 @@ contract ArbitrationDAO {
         uint256 listingId;
         address raisedBy;
         bool resolved;
-        address resolution;
+        address resolution; //@audit not neccessary
     }
 
     uint256 public disputeCounter;
     mapping(uint256 => Dispute) public disputes;
     mapping(uint256 => mapping(address => bool)) public votes;
     mapping(uint256 => uint256) public voteCounts;
-    
+
     // New variables for trusted signers and quorum
     mapping(address => bool) public trustedSigners;
     uint256 public numTrustedSigners;
@@ -71,7 +28,10 @@ contract ArbitrationDAO {
     event QuorumPercentageUpdated(uint256 newPercentage);
 
     constructor(uint256 _quorumPercentage) {
-        require(_quorumPercentage > 0 && _quorumPercentage <= 10, "Invalid quorum percentage");
+        require(
+            _quorumPercentage > 0 && _quorumPercentage <= 60,
+            "Invalid quorum percentage"
+        );
         quorumPercentage = _quorumPercentage;
         admin = msg.sender;
         addTrustedSigner(msg.sender); // Admin is automatically a trusted signer
@@ -83,7 +43,10 @@ contract ArbitrationDAO {
     }
 
     modifier onlyTrustedSigner() {
-        require(trustedSigners[msg.sender], "Only trusted signers can call this function");
+        require(
+            trustedSigners[msg.sender],
+            "Only trusted signers can call this function"
+        );
         _;
     }
 
@@ -103,18 +66,33 @@ contract ArbitrationDAO {
     }
 
     function updateQuorumPercentage(uint256 _newPercentage) external onlyAdmin {
-        require(_newPercentage > 0 && _newPercentage <= 10, "Invalid quorum percentage");
+        require(
+            _newPercentage > 0 && _newPercentage <= 60,
+            "Invalid quorum percentage"
+        );
         quorumPercentage = _newPercentage;
         emit QuorumPercentageUpdated(_newPercentage);
     }
 
     function createDispute(uint256 _listingId) external {
         disputeCounter++;
-        disputes[disputeCounter] = Dispute(disputeCounter, _listingId, msg.sender, false, address(0));
+        //@audit-info What is function of `address(0)`?
+        disputes[disputeCounter] = Dispute(
+            disputeCounter,
+            _listingId,
+            msg.sender,
+            false,
+            address(0)
+        );
         emit DisputeCreated(disputeCounter, _listingId, msg.sender);
     }
 
-    function voteOnDispute(uint256 _disputeId, address resolution) external onlyTrustedSigner {
+ 
+    function voteOnDispute(
+        uint256 _disputeId,
+        address resolution,
+        bool /** isSupport */
+    ) external onlyTrustedSigner {
         require(!disputes[_disputeId].resolved, "Dispute already resolved");
         require(!votes[_disputeId][msg.sender], "Already voted");
 
@@ -122,8 +100,8 @@ contract ArbitrationDAO {
         voteCounts[_disputeId]++;
 
         // Calculate required votes for quorum
-        uint256 requiredVotes = (numTrustedSigners * quorumPercentage) / 10;
-        
+        uint256 requiredVotes = (numTrustedSigners * quorumPercentage) / 60;
+
         // Check if quorum is reached
         if (voteCounts[_disputeId] >= requiredVotes) {
             disputes[_disputeId].resolved = true;
@@ -134,7 +112,7 @@ contract ArbitrationDAO {
 
     // View function to check if quorum is reached for a dispute
     function isQuorumReached(uint256 _disputeId) public view returns (bool) {
-        uint256 requiredVotes = (numTrustedSigners * quorumPercentage) / 10;
+        uint256 requiredVotes = (numTrustedSigners * quorumPercentage) / 60;
         return voteCounts[_disputeId] >= requiredVotes;
     }
 }
