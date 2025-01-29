@@ -1,63 +1,13 @@
-// // SPDX-License-Identifier: MIT
-// pragma solidity ^0.8.27;
-
-// contract Escrow {
-//     struct EscrowAgreement {
-//         uint256 id;
-//         uint256 agreementId;
-//         address depositor;
-//         uint256 amount;
-//         uint8 status; // 0: active, 1: released, 2: reverted 
-//     }
-
-//     mapping(uint256 => EscrowAgreement) public escrows;
-//     uint256 public escrowCounter;
-
-//     event EscrowCreated(uint256 id, uint256 agreementId, uint256 amount);
-//     event EscrowReleased(uint256 id);
-//     event EscrowReverted(uint256 id);
-
-//     function createEscrow(uint256 _agreementId, uint256 _amount) public payable {
-//         require(msg.value == _amount, "Incorrect deposit amount");
-//         escrows[escrowCounter] = EscrowAgreement(
-//             escrowCounter,
-//             _agreementId,
-//             msg.sender,
-//             _amount,
-//             0
-//         );
-//         emit EscrowCreated(escrowCounter, _agreementId, _amount);
-//         escrowCounter++;
-//     }
-
-//     function releaseEscrow(uint256 _escrowId) public {
-//         EscrowAgreement storage escrow = escrows[_escrowId];
-//         require(escrow.status == 0, "Escrow not active");
-
-//         payable(escrow.depositor).transfer(escrow.amount);
-//         escrow.status = 1;
-//         emit EscrowReleased(_escrowId);
-//     }
-
-//     function revertEscrow(uint256 _escrowId) public {
-//         EscrowAgreement storage escrow = escrows[_escrowId];
-//         require(escrow.status == 0, "Escrow not active");
-
-//         escrow.status = 2;
-//         emit EscrowReverted(_escrowId);
-//     }
-// }
-
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+// /home/naheem/blockchain-class/barter-skillswap/contract/lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol
+// import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract SkillMarketplace is ERC721, ReentrancyGuard {
-    using Counters for Counters.Counter;
+contract SkillMarketplace is /* ERC721, */ ReentrancyGuard {
+    // using Counters for Counters.Counter;
     
     struct SkillListing {
         uint256 id;
@@ -94,9 +44,9 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
         Cancelled
     }
 
-    Counters.Counter private _tokenIds;
-    Counters.Counter private _listingIds;
-    Counters.Counter private _orderIds;
+    uint256 private _tokenIds;
+    uint256 private _listingIds;
+    uint256 private _orderIds;
 
     mapping(uint256 => SkillListing) public listings;
     mapping(uint256 => Order) public orders;
@@ -112,7 +62,7 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
     event ReputationUpdated(address indexed user, bool isPositive);
     event FundsReleased(uint256 indexed orderId, address recipient, uint256 amount);
 
-    constructor() ERC721("Skill Completion Badge", "SKILL") {}
+    constructor() {}
 
     modifier onlyProvider(uint256 _listingId) {
         require(listings[_listingId].provider == msg.sender, "Not the provider");
@@ -133,7 +83,7 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
         require(_price > 0, "Price must be greater than 0");
         require(_deadline > block.timestamp, "Invalid deadline");
 
-        uint256 listingId = _listingIds.current();
+        uint256 listingId = _listingIds;
         listings[listingId] = SkillListing({
             id: listingId,
             provider: msg.sender,
@@ -144,7 +94,7 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
             deadline: _deadline
         });
 
-        _listingIds.increment();
+        _listingIds++;
         emit ListingCreated(listingId, msg.sender, _skillName, _price);
         return listingId;
     }
@@ -155,7 +105,7 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
         require(msg.value == listing.price, "Incorrect payment amount");
         require(block.timestamp < listing.deadline, "Listing expired");
 
-        uint256 orderId = _orderIds.current();
+        uint256 orderId = _orderIds;
         orders[orderId] = Order({
             id: orderId,
             listingId: _listingId,
@@ -165,7 +115,7 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
             status: OrderStatus.Pending
         });
 
-        _orderIds.increment();
+        _orderIds++;
         emit OrderPlaced(orderId, _listingId, msg.sender);
         return orderId;
     }
@@ -189,7 +139,7 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
         
         // Update status and mint NFT
         order.status = OrderStatus.Completed;
-        _mintCompletionNFT(provider);
+        // _mintCompletionNFT(provider);
         
         // Update reputation
         _updateReputation(provider, true);
@@ -216,12 +166,12 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
         emit FundsReleased(_orderId, msg.sender, order.amount);
     }
 
-    function _mintCompletionNFT(address recipient) private {
-        _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
-        _safeMint(recipient, newTokenId);
-        emit NFTMinted(recipient, newTokenId);
-    }
+    // function _mintCompletionNFT(address recipient) private {
+    //     _tokenIds.increment();
+    //     uint256 newTokenId = _tokenIds.current();
+    //     _safeMint(recipient, newTokenId);
+    //     emit NFTMinted(recipient, newTokenId);
+    // }
 
     function _updateReputation(address user, bool isPositive) private {
         UserReputation storage reputation = userReputations[user];
@@ -230,6 +180,7 @@ contract SkillMarketplace is ERC721, ReentrancyGuard {
         } else {
             reputation.negativePoints++;
         }
+        //more explanation
         reputation.totalOrders++;
         emit ReputationUpdated(user, isPositive);
     }
