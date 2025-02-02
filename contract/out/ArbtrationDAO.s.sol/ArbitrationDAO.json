@@ -1,1 +1,415 @@
-{"abi":[{"type":"function","name":"createDispute","inputs":[{"name":"_listingId","type":"uint256","internalType":"uint256"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"disputeCounter","inputs":[],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"type":"function","name":"disputes","inputs":[{"name":"","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"id","type":"uint256","internalType":"uint256"},{"name":"listingId","type":"uint256","internalType":"uint256"},{"name":"raisedBy","type":"address","internalType":"address"},{"name":"resolved","type":"bool","internalType":"bool"},{"name":"resolution","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"voteCounts","inputs":[{"name":"","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"type":"function","name":"voteOnDispute","inputs":[{"name":"_disputeId","type":"uint256","internalType":"uint256"},{"name":"resolution","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"votes","inputs":[{"name":"","type":"uint256","internalType":"uint256"},{"name":"","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"event","name":"DisputeCreated","inputs":[{"name":"id","type":"uint256","indexed":false,"internalType":"uint256"},{"name":"listingId","type":"uint256","indexed":false,"internalType":"uint256"},{"name":"raisedBy","type":"address","indexed":false,"internalType":"address"}],"anonymous":false},{"type":"event","name":"DisputeResolved","inputs":[{"name":"id","type":"uint256","indexed":false,"internalType":"uint256"},{"name":"resolution","type":"address","indexed":false,"internalType":"address"}],"anonymous":false}],"bytecode":{"object":"0x6080604052348015600e575f5ffd5b506104b48061001c5f395ff3fe608060405234801561000f575f5ffd5b5060043610610060575f3560e01c80633c3a220d146100645780634ac8a52914610096578063564a565d146100ab5780637d36f4d31461012e5780638b8998c214610136578063d23254b414610149575b5f5ffd5b61008361007236600461040a565b60036020525f908152604090205481565b6040519081526020015b60405180910390f35b6100a96100a436600461040a565b610186565b005b6100f86100b936600461040a565b600160208190525f9182526040909120805491810154600282015460039092015490916001600160a01b0380821692600160a01b90920460ff16911685565b6040805195865260208601949094526001600160a01b03928316938501939093521515606084015216608082015260a00161008d565b6100835f5481565b6100a9610144366004610421565b610271565b610176610157366004610421565b600260209081525f928352604080842090915290825290205460ff1681565b604051901515815260200161008d565b5f805490806101948361045a565b90915550506040805160a0810182525f805480835260208084018681523385870181815260608088018781526080890188815296885260018087528a892099518a55945194890194909455905160028801805494511515600160a01b026001600160a81b03199095166001600160a01b039283161794909417909355935160039096018054969092166001600160a01b031990961695909517905591548451908152918201859052928101919091527f89b79bdd21d92f99bbf75358698d6a2b7a0a48fe9467a9ff8e5bac1ac638a3fc910160405180910390a150565b5f82815260016020526040902060020154600160a01b900460ff16156102de5760405162461bcd60e51b815260206004820152601860248201527f4469737075746520616c7265616479207265736f6c766564000000000000000060448201526064015b60405180910390fd5b5f82815260026020908152604080832033845290915290205460ff16156103375760405162461bcd60e51b815260206004820152600d60248201526c105b1c9958591e481d9bdd1959609a1b60448201526064016102d5565b5f8281526002602090815260408083203384528252808320805460ff19166001179055848352600390915281208054916103708361045a565b90915550505f8281526003602052604090205460011015610406575f8281526001602090815260409182902060028101805460ff60a01b1916600160a01b17905560030180546001600160a01b0385166001600160a01b031990911681179091558251858152918201527ff77ceb5e091d2da041bc760667f9d5fe7a756949eaf29250ad0e60ca6f4c27d9910160405180910390a15b5050565b5f6020828403121561041a575f5ffd5b5035919050565b5f5f60408385031215610432575f5ffd5b8235915060208301356001600160a01b038116811461044f575f5ffd5b809150509250929050565b5f6001820161047757634e487b7160e01b5f52601160045260245ffd5b506001019056fea26469706673582212209b3605c4ce5c9e1d523ca8add39adfdd08cbdd6e94efe1f6cebe71188522239164736f6c634300081c0033","sourceMap":"59:1304:25:-:0;;;;;;;;;;;;;;;;;;;","linkReferences":{}},"deployedBytecode":{"object":"0x608060405234801561000f575f5ffd5b5060043610610060575f3560e01c80633c3a220d146100645780634ac8a52914610096578063564a565d146100ab5780637d36f4d31461012e5780638b8998c214610136578063d23254b414610149575b5f5ffd5b61008361007236600461040a565b60036020525f908152604090205481565b6040519081526020015b60405180910390f35b6100a96100a436600461040a565b610186565b005b6100f86100b936600461040a565b600160208190525f9182526040909120805491810154600282015460039092015490916001600160a01b0380821692600160a01b90920460ff16911685565b6040805195865260208601949094526001600160a01b03928316938501939093521515606084015216608082015260a00161008d565b6100835f5481565b6100a9610144366004610421565b610271565b610176610157366004610421565b600260209081525f928352604080842090915290825290205460ff1681565b604051901515815260200161008d565b5f805490806101948361045a565b90915550506040805160a0810182525f805480835260208084018681523385870181815260608088018781526080890188815296885260018087528a892099518a55945194890194909455905160028801805494511515600160a01b026001600160a81b03199095166001600160a01b039283161794909417909355935160039096018054969092166001600160a01b031990961695909517905591548451908152918201859052928101919091527f89b79bdd21d92f99bbf75358698d6a2b7a0a48fe9467a9ff8e5bac1ac638a3fc910160405180910390a150565b5f82815260016020526040902060020154600160a01b900460ff16156102de5760405162461bcd60e51b815260206004820152601860248201527f4469737075746520616c7265616479207265736f6c766564000000000000000060448201526064015b60405180910390fd5b5f82815260026020908152604080832033845290915290205460ff16156103375760405162461bcd60e51b815260206004820152600d60248201526c105b1c9958591e481d9bdd1959609a1b60448201526064016102d5565b5f8281526002602090815260408083203384528252808320805460ff19166001179055848352600390915281208054916103708361045a565b90915550505f8281526003602052604090205460011015610406575f8281526001602090815260409182902060028101805460ff60a01b1916600160a01b17905560030180546001600160a01b0385166001600160a01b031990911681179091558251858152918201527ff77ceb5e091d2da041bc760667f9d5fe7a756949eaf29250ad0e60ca6f4c27d9910160405180910390a15b5050565b5f6020828403121561041a575f5ffd5b5035919050565b5f5f60408385031215610432575f5ffd5b8235915060208301356001600160a01b038116811461044f575f5ffd5b809150509250929050565b5f6001820161047757634e487b7160e01b5f52601160045260245ffd5b506001019056fea26469706673582212209b3605c4ce5c9e1d523ca8add39adfdd08cbdd6e94efe1f6cebe71188522239164736f6c634300081c0033","sourceMap":"59:1304:25:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;388:45;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;391:25:29;;;379:2;364:18;388:45:25;;;;;;;;575:257;;;;;;:::i;:::-;;:::i;:::-;;276:43;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;276:43:25;;;;-1:-1:-1;;;276:43:25;;;;;;;;;;;;;680:25:29;;;736:2;721:18;;714:34;;;;-1:-1:-1;;;;;784:32:29;;;764:18;;;757:60;;;;860:14;853:22;848:2;833:18;;826:50;913:32;907:3;892:19;;885:61;667:3;652:19;276:43:25;427:525:29;241:29:25;;;;;;838:523;;;;;;:::i;:::-;;:::i;325:57::-;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1535:14:29;;1528:22;1510:41;;1498:2;1483:18;325:57:25;1370:187:29;575:257:25;637:14;:16;;;:14;:16;;;:::i;:::-;;;;-1:-1:-1;;690:66:25;;;;;;;;-1:-1:-1;698:14:25;;690:66;;;;;;;;;;726:10;690:66;;;;;;;;;;;;;;;;;;;663:24;;;690:66;663:24;;;;;;:93;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;663:93:25;-1:-1:-1;;;;;;663:93:25;;;-1:-1:-1;;;;;663:93:25;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;;663:93:25;;;;;;;;;786:14;;771:54;;2001:25:29;;;2042:18;;;2035:34;;;2085:18;;;2078:60;;;;771:54:25;;1974:18:29;771:54:25;;;;;;;575:257;:::o;838:523::-;929:20;;;;:8;:20;;;;;:29;;;-1:-1:-1;;;929:29:25;;;;928:30;920:67;;;;-1:-1:-1;;;920:67:25;;2351:2:29;920:67:25;;;2333:21:29;2390:2;2370:18;;;2363:30;2429:26;2409:18;;;2402:54;2473:18;;920:67:25;;;;;;;;;1006:17;;;;:5;:17;;;;;;;;1024:10;1006:29;;;;;;;;;;1005:30;997:56;;;;-1:-1:-1;;;997:56:25;;2704:2:29;997:56:25;;;2686:21:29;2743:2;2723:18;;;2716:30;-1:-1:-1;;;2762:18:29;;;2755:43;2815:18;;997:56:25;2502:337:29;997:56:25;1064:17;;;;:5;:17;;;;;;;;1082:10;1064:29;;;;;;;:36;;-1:-1:-1;;1064:36:25;1096:4;1064:36;;;1110:22;;;:10;:22;;;;;:24;;;;;;:::i;:::-;;;;-1:-1:-1;;1149:22:25;;;;:10;:22;;;;;;1174:1;-1:-1:-1;1145:210:25;;;1192:20;;;;1224:4;1192:20;;;;;;;;;:29;;;:36;;-1:-1:-1;;;;1192:36:25;-1:-1:-1;;;1192:36:25;;;1242:31;;:44;;-1:-1:-1;;;;;1242:44:25;;-1:-1:-1;;;;;;1242:44:25;;;;;;;;1305:39;;3018:25:29;;;3059:18;;;3052:60;1305:39:25;;2991:18:29;1305:39:25;;;;;;;1145:210;838:523;;:::o;14:226:29:-;73:6;126:2;114:9;105:7;101:23;97:32;94:52;;;142:1;139;132:12;94:52;-1:-1:-1;187:23:29;;14:226;-1:-1:-1;14:226:29:o;957:408::-;1025:6;1033;1086:2;1074:9;1065:7;1061:23;1057:32;1054:52;;;1102:1;1099;1092:12;1054:52;1147:23;;;-1:-1:-1;1246:2:29;1231:18;;1218:32;-1:-1:-1;;;;;1281:33:29;;1269:46;;1259:74;;1329:1;1326;1319:12;1259:74;1352:7;1342:17;;;957:408;;;;;:::o;1562:232::-;1601:3;1622:17;;;1619:140;;1681:10;1676:3;1672:20;1669:1;1662:31;1716:4;1713:1;1706:15;1744:4;1741:1;1734:15;1619:140;-1:-1:-1;1786:1:29;1775:13;;1562:232::o","linkReferences":{}},"methodIdentifiers":{"createDispute(uint256)":"4ac8a529","disputeCounter()":"7d36f4d3","disputes(uint256)":"564a565d","voteCounts(uint256)":"3c3a220d","voteOnDispute(uint256,address)":"8b8998c2","votes(uint256,address)":"d23254b4"},"rawMetadata":"{\"compiler\":{\"version\":\"0.8.28+commit.7893614a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"raisedBy\",\"type\":\"address\"}],\"name\":\"DisputeCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"resolution\",\"type\":\"address\"}],\"name\":\"DisputeResolved\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"}],\"name\":\"createDispute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"disputeCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"disputes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"raisedBy\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"resolved\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"resolution\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"voteCounts\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_disputeId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"resolution\",\"type\":\"address\"}],\"name\":\"voteOnDispute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"votes\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"script/ArbtrationDAO.s.sol\":\"ArbitrationDAO\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/\",\":ds-test/=lib/openzeppelin-contracts/lib/forge-std/lib/ds-test/src/\",\":erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/\",\":forge-std/=lib/forge-std/src/\",\":halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\"]},\"sources\":{\"script/ArbtrationDAO.s.sol\":{\"keccak256\":\"0x039c01f92bdf720640ec35978be6014525f853e969c34057fb5e5bd0590495b7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://db649f5d6dda692a6976fe177373d60c2985de81402a6871e88eb2fb713f29ed\",\"dweb:/ipfs/QmT8pELvEtD3HDmMnsguRWJDGVkrrKR5wKtuoSSA3rhPSd\"]}},\"version\":1}","metadata":{"compiler":{"version":"0.8.28+commit.7893614a"},"language":"Solidity","output":{"abi":[{"inputs":[{"internalType":"uint256","name":"id","type":"uint256","indexed":false},{"internalType":"uint256","name":"listingId","type":"uint256","indexed":false},{"internalType":"address","name":"raisedBy","type":"address","indexed":false}],"type":"event","name":"DisputeCreated","anonymous":false},{"inputs":[{"internalType":"uint256","name":"id","type":"uint256","indexed":false},{"internalType":"address","name":"resolution","type":"address","indexed":false}],"type":"event","name":"DisputeResolved","anonymous":false},{"inputs":[{"internalType":"uint256","name":"_listingId","type":"uint256"}],"stateMutability":"nonpayable","type":"function","name":"createDispute"},{"inputs":[],"stateMutability":"view","type":"function","name":"disputeCounter","outputs":[{"internalType":"uint256","name":"","type":"uint256"}]},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","name":"disputes","outputs":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"uint256","name":"listingId","type":"uint256"},{"internalType":"address","name":"raisedBy","type":"address"},{"internalType":"bool","name":"resolved","type":"bool"},{"internalType":"address","name":"resolution","type":"address"}]},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function","name":"voteCounts","outputs":[{"internalType":"uint256","name":"","type":"uint256"}]},{"inputs":[{"internalType":"uint256","name":"_disputeId","type":"uint256"},{"internalType":"address","name":"resolution","type":"address"}],"stateMutability":"nonpayable","type":"function","name":"voteOnDispute"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function","name":"votes","outputs":[{"internalType":"bool","name":"","type":"bool"}]}],"devdoc":{"kind":"dev","methods":{},"version":1},"userdoc":{"kind":"user","methods":{},"version":1}},"settings":{"remappings":["@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/","ds-test/=lib/openzeppelin-contracts/lib/forge-std/lib/ds-test/src/","erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/","forge-std/=lib/forge-std/src/","halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/","openzeppelin-contracts/=lib/openzeppelin-contracts/"],"optimizer":{"enabled":true,"runs":200},"metadata":{"bytecodeHash":"ipfs"},"compilationTarget":{"script/ArbtrationDAO.s.sol":"ArbitrationDAO"},"evmVersion":"cancun","libraries":{}},"sources":{"script/ArbtrationDAO.s.sol":{"keccak256":"0x039c01f92bdf720640ec35978be6014525f853e969c34057fb5e5bd0590495b7","urls":["bzz-raw://db649f5d6dda692a6976fe177373d60c2985de81402a6871e88eb2fb713f29ed","dweb:/ipfs/QmT8pELvEtD3HDmMnsguRWJDGVkrrKR5wKtuoSSA3rhPSd"],"license":"MIT"}},"version":1},"id":25}
+{
+    "abi": [
+        {
+            "type": "function",
+            "name": "createDispute",
+            "inputs": [
+                {
+                    "name": "_listingId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "disputeCounter",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "disputes",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "id",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "listingId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "raisedBy",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "resolved",
+                    "type": "bool",
+                    "internalType": "bool"
+                },
+                {
+                    "name": "resolution",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "voteCounts",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "voteOnDispute",
+            "inputs": [
+                {
+                    "name": "_disputeId",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "resolution",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
+        },
+        {
+            "type": "function",
+            "name": "votes",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "stateMutability": "view"
+        },
+        {
+            "type": "event",
+            "name": "DisputeCreated",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "listingId",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "raisedBy",
+                    "type": "address",
+                    "indexed": false,
+                    "internalType": "address"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "event",
+            "name": "DisputeResolved",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "uint256",
+                    "indexed": false,
+                    "internalType": "uint256"
+                },
+                {
+                    "name": "resolution",
+                    "type": "address",
+                    "indexed": false,
+                    "internalType": "address"
+                }
+            ],
+            "anonymous": false
+        }
+    ],
+    "bytecode": {
+        "object": "0x6080604052348015600e575f5ffd5b506104b48061001c5f395ff3fe608060405234801561000f575f5ffd5b5060043610610060575f3560e01c80633c3a220d146100645780634ac8a52914610096578063564a565d146100ab5780637d36f4d31461012e5780638b8998c214610136578063d23254b414610149575b5f5ffd5b61008361007236600461040a565b60036020525f908152604090205481565b6040519081526020015b60405180910390f35b6100a96100a436600461040a565b610186565b005b6100f86100b936600461040a565b600160208190525f9182526040909120805491810154600282015460039092015490916001600160a01b0380821692600160a01b90920460ff16911685565b6040805195865260208601949094526001600160a01b03928316938501939093521515606084015216608082015260a00161008d565b6100835f5481565b6100a9610144366004610421565b610271565b610176610157366004610421565b600260209081525f928352604080842090915290825290205460ff1681565b604051901515815260200161008d565b5f805490806101948361045a565b90915550506040805160a0810182525f805480835260208084018681523385870181815260608088018781526080890188815296885260018087528a892099518a55945194890194909455905160028801805494511515600160a01b026001600160a81b03199095166001600160a01b039283161794909417909355935160039096018054969092166001600160a01b031990961695909517905591548451908152918201859052928101919091527f89b79bdd21d92f99bbf75358698d6a2b7a0a48fe9467a9ff8e5bac1ac638a3fc910160405180910390a150565b5f82815260016020526040902060020154600160a01b900460ff16156102de5760405162461bcd60e51b815260206004820152601860248201527f4469737075746520616c7265616479207265736f6c766564000000000000000060448201526064015b60405180910390fd5b5f82815260026020908152604080832033845290915290205460ff16156103375760405162461bcd60e51b815260206004820152600d60248201526c105b1c9958591e481d9bdd1959609a1b60448201526064016102d5565b5f8281526002602090815260408083203384528252808320805460ff19166001179055848352600390915281208054916103708361045a565b90915550505f8281526003602052604090205460011015610406575f8281526001602090815260409182902060028101805460ff60a01b1916600160a01b17905560030180546001600160a01b0385166001600160a01b031990911681179091558251858152918201527ff77ceb5e091d2da041bc760667f9d5fe7a756949eaf29250ad0e60ca6f4c27d9910160405180910390a15b5050565b5f6020828403121561041a575f5ffd5b5035919050565b5f5f60408385031215610432575f5ffd5b8235915060208301356001600160a01b038116811461044f575f5ffd5b809150509250929050565b5f6001820161047757634e487b7160e01b5f52601160045260245ffd5b506001019056fea26469706673582212209b3605c4ce5c9e1d523ca8add39adfdd08cbdd6e94efe1f6cebe71188522239164736f6c634300081c0033",
+        "sourceMap": "59:1304:25:-:0;;;;;;;;;;;;;;;;;;;",
+        "linkReferences": {}
+    },
+    "deployedBytecode": {
+        "object": "0x608060405234801561000f575f5ffd5b5060043610610060575f3560e01c80633c3a220d146100645780634ac8a52914610096578063564a565d146100ab5780637d36f4d31461012e5780638b8998c214610136578063d23254b414610149575b5f5ffd5b61008361007236600461040a565b60036020525f908152604090205481565b6040519081526020015b60405180910390f35b6100a96100a436600461040a565b610186565b005b6100f86100b936600461040a565b600160208190525f9182526040909120805491810154600282015460039092015490916001600160a01b0380821692600160a01b90920460ff16911685565b6040805195865260208601949094526001600160a01b03928316938501939093521515606084015216608082015260a00161008d565b6100835f5481565b6100a9610144366004610421565b610271565b610176610157366004610421565b600260209081525f928352604080842090915290825290205460ff1681565b604051901515815260200161008d565b5f805490806101948361045a565b90915550506040805160a0810182525f805480835260208084018681523385870181815260608088018781526080890188815296885260018087528a892099518a55945194890194909455905160028801805494511515600160a01b026001600160a81b03199095166001600160a01b039283161794909417909355935160039096018054969092166001600160a01b031990961695909517905591548451908152918201859052928101919091527f89b79bdd21d92f99bbf75358698d6a2b7a0a48fe9467a9ff8e5bac1ac638a3fc910160405180910390a150565b5f82815260016020526040902060020154600160a01b900460ff16156102de5760405162461bcd60e51b815260206004820152601860248201527f4469737075746520616c7265616479207265736f6c766564000000000000000060448201526064015b60405180910390fd5b5f82815260026020908152604080832033845290915290205460ff16156103375760405162461bcd60e51b815260206004820152600d60248201526c105b1c9958591e481d9bdd1959609a1b60448201526064016102d5565b5f8281526002602090815260408083203384528252808320805460ff19166001179055848352600390915281208054916103708361045a565b90915550505f8281526003602052604090205460011015610406575f8281526001602090815260409182902060028101805460ff60a01b1916600160a01b17905560030180546001600160a01b0385166001600160a01b031990911681179091558251858152918201527ff77ceb5e091d2da041bc760667f9d5fe7a756949eaf29250ad0e60ca6f4c27d9910160405180910390a15b5050565b5f6020828403121561041a575f5ffd5b5035919050565b5f5f60408385031215610432575f5ffd5b8235915060208301356001600160a01b038116811461044f575f5ffd5b809150509250929050565b5f6001820161047757634e487b7160e01b5f52601160045260245ffd5b506001019056fea26469706673582212209b3605c4ce5c9e1d523ca8add39adfdd08cbdd6e94efe1f6cebe71188522239164736f6c634300081c0033",
+        "sourceMap": "59:1304:25:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;388:45;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;391:25:29;;;379:2;364:18;388:45:25;;;;;;;;575:257;;;;;;:::i;:::-;;:::i;:::-;;276:43;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;276:43:25;;;;-1:-1:-1;;;276:43:25;;;;;;;;;;;;;680:25:29;;;736:2;721:18;;714:34;;;;-1:-1:-1;;;;;784:32:29;;;764:18;;;757:60;;;;860:14;853:22;848:2;833:18;;826:50;913:32;907:3;892:19;;885:61;667:3;652:19;276:43:25;427:525:29;241:29:25;;;;;;838:523;;;;;;:::i;:::-;;:::i;325:57::-;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1535:14:29;;1528:22;1510:41;;1498:2;1483:18;325:57:25;1370:187:29;575:257:25;637:14;:16;;;:14;:16;;;:::i;:::-;;;;-1:-1:-1;;690:66:25;;;;;;;;-1:-1:-1;698:14:25;;690:66;;;;;;;;;;726:10;690:66;;;;;;;;;;;;;;;;;;;663:24;;;690:66;663:24;;;;;;:93;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;663:93:25;-1:-1:-1;;;;;;663:93:25;;;-1:-1:-1;;;;;663:93:25;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;;663:93:25;;;;;;;;;786:14;;771:54;;2001:25:29;;;2042:18;;;2035:34;;;2085:18;;;2078:60;;;;771:54:25;;1974:18:29;771:54:25;;;;;;;575:257;:::o;838:523::-;929:20;;;;:8;:20;;;;;:29;;;-1:-1:-1;;;929:29:25;;;;928:30;920:67;;;;-1:-1:-1;;;920:67:25;;2351:2:29;920:67:25;;;2333:21:29;2390:2;2370:18;;;2363:30;2429:26;2409:18;;;2402:54;2473:18;;920:67:25;;;;;;;;;1006:17;;;;:5;:17;;;;;;;;1024:10;1006:29;;;;;;;;;;1005:30;997:56;;;;-1:-1:-1;;;997:56:25;;2704:2:29;997:56:25;;;2686:21:29;2743:2;2723:18;;;2716:30;-1:-1:-1;;;2762:18:29;;;2755:43;2815:18;;997:56:25;2502:337:29;997:56:25;1064:17;;;;:5;:17;;;;;;;;1082:10;1064:29;;;;;;;:36;;-1:-1:-1;;1064:36:25;1096:4;1064:36;;;1110:22;;;:10;:22;;;;;:24;;;;;;:::i;:::-;;;;-1:-1:-1;;1149:22:25;;;;:10;:22;;;;;;1174:1;-1:-1:-1;1145:210:25;;;1192:20;;;;1224:4;1192:20;;;;;;;;;:29;;;:36;;-1:-1:-1;;;;1192:36:25;-1:-1:-1;;;1192:36:25;;;1242:31;;:44;;-1:-1:-1;;;;;1242:44:25;;-1:-1:-1;;;;;;1242:44:25;;;;;;;;1305:39;;3018:25:29;;;3059:18;;;3052:60;1305:39:25;;2991:18:29;1305:39:25;;;;;;;1145:210;838:523;;:::o;14:226:29:-;73:6;126:2;114:9;105:7;101:23;97:32;94:52;;;142:1;139;132:12;94:52;-1:-1:-1;187:23:29;;14:226;-1:-1:-1;14:226:29:o;957:408::-;1025:6;1033;1086:2;1074:9;1065:7;1061:23;1057:32;1054:52;;;1102:1;1099;1092:12;1054:52;1147:23;;;-1:-1:-1;1246:2:29;1231:18;;1218:32;-1:-1:-1;;;;;1281:33:29;;1269:46;;1259:74;;1329:1;1326;1319:12;1259:74;1352:7;1342:17;;;957:408;;;;;:::o;1562:232::-;1601:3;1622:17;;;1619:140;;1681:10;1676:3;1672:20;1669:1;1662:31;1716:4;1713:1;1706:15;1744:4;1741:1;1734:15;1619:140;-1:-1:-1;1786:1:29;1775:13;;1562:232::o",
+        "linkReferences": {}
+    },
+    "methodIdentifiers": {
+        "createDispute(uint256)": "4ac8a529",
+        "disputeCounter()": "7d36f4d3",
+        "disputes(uint256)": "564a565d",
+        "voteCounts(uint256)": "3c3a220d",
+        "voteOnDispute(uint256,address)": "8b8998c2",
+        "votes(uint256,address)": "d23254b4"
+    },
+    "rawMetadata": "{\"compiler\":{\"version\":\"0.8.28+commit.7893614a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"raisedBy\",\"type\":\"address\"}],\"name\":\"DisputeCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"resolution\",\"type\":\"address\"}],\"name\":\"DisputeResolved\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_listingId\",\"type\":\"uint256\"}],\"name\":\"createDispute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"disputeCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"disputes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"listingId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"raisedBy\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"resolved\",\"type\":\"bool\"},{\"internalType\":\"address\",\"name\":\"resolution\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"voteCounts\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_disputeId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"resolution\",\"type\":\"address\"}],\"name\":\"voteOnDispute\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"votes\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"script/ArbtrationDAO.s.sol\":\"ArbitrationDAO\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/\",\":ds-test/=lib/openzeppelin-contracts/lib/forge-std/lib/ds-test/src/\",\":erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/\",\":forge-std/=lib/forge-std/src/\",\":halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\"]},\"sources\":{\"script/ArbtrationDAO.s.sol\":{\"keccak256\":\"0x039c01f92bdf720640ec35978be6014525f853e969c34057fb5e5bd0590495b7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://db649f5d6dda692a6976fe177373d60c2985de81402a6871e88eb2fb713f29ed\",\"dweb:/ipfs/QmT8pELvEtD3HDmMnsguRWJDGVkrrKR5wKtuoSSA3rhPSd\"]}},\"version\":1}",
+    "metadata": {
+        "compiler": {
+            "version": "0.8.28+commit.7893614a"
+        },
+        "language": "Solidity",
+        "output": {
+            "abi": [
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "id",
+                            "type": "uint256",
+                            "indexed": false
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "listingId",
+                            "type": "uint256",
+                            "indexed": false
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "raisedBy",
+                            "type": "address",
+                            "indexed": false
+                        }
+                    ],
+                    "type": "event",
+                    "name": "DisputeCreated",
+                    "anonymous": false
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "id",
+                            "type": "uint256",
+                            "indexed": false
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "resolution",
+                            "type": "address",
+                            "indexed": false
+                        }
+                    ],
+                    "type": "event",
+                    "name": "DisputeResolved",
+                    "anonymous": false
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "_listingId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "nonpayable",
+                    "type": "function",
+                    "name": "createDispute"
+                },
+                {
+                    "inputs": [],
+                    "stateMutability": "view",
+                    "type": "function",
+                    "name": "disputeCounter",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ]
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function",
+                    "name": "disputes",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "id",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "listingId",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "raisedBy",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "bool",
+                            "name": "resolved",
+                            "type": "bool"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "resolution",
+                            "type": "address"
+                        }
+                    ]
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function",
+                    "name": "voteCounts",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ]
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "_disputeId",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "resolution",
+                            "type": "address"
+                        }
+                    ],
+                    "stateMutability": "nonpayable",
+                    "type": "function",
+                    "name": "voteOnDispute"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function",
+                    "name": "votes",
+                    "outputs": [
+                        {
+                            "internalType": "bool",
+                            "name": "",
+                            "type": "bool"
+                        }
+                    ]
+                }
+            ],
+            "devdoc": {
+                "kind": "dev",
+                "methods": {},
+                "version": 1
+            },
+            "userdoc": {
+                "kind": "user",
+                "methods": {},
+                "version": 1
+            }
+        },
+        "settings": {
+            "remappings": [
+                "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+                "ds-test/=lib/openzeppelin-contracts/lib/forge-std/lib/ds-test/src/",
+                "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+                "forge-std/=lib/forge-std/src/",
+                "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+                "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+            ],
+            "optimizer": {
+                "enabled": true,
+                "runs": 200
+            },
+            "metadata": {
+                "bytecodeHash": "ipfs"
+            },
+            "compilationTarget": {
+                "script/ArbtrationDAO.s.sol": "ArbitrationDAO"
+            },
+            "evmVersion": "cancun",
+            "libraries": {}
+        },
+        "sources": {
+            "script/ArbtrationDAO.s.sol": {
+                "keccak256": "0x039c01f92bdf720640ec35978be6014525f853e969c34057fb5e5bd0590495b7",
+                "urls": [
+                    "bzz-raw://db649f5d6dda692a6976fe177373d60c2985de81402a6871e88eb2fb713f29ed",
+                    "dweb:/ipfs/QmT8pELvEtD3HDmMnsguRWJDGVkrrKR5wKtuoSSA3rhPSd"
+                ],
+                "license": "MIT"
+            }
+        },
+        "version": 1
+    },
+    "id": 25
+}
