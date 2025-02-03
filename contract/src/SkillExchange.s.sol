@@ -320,4 +320,5 @@ contract SkillExchange is Ownable /* , ERC721 */ {
             rep.positivePoints + rep.negativePoints
         );
     }
+    
 }

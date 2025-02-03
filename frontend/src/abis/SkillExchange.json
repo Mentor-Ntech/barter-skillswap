@@ -1,338 +1,715 @@
 [
     {
-        "type": "constructor",
         "inputs": [
             {
+                "internalType": "contract IERC20",
                 "name": "_token",
-                "type": "address",
-                "internalType": "contract IERC20"
-            }
-        ],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "agreementCounter",
-        "inputs": [],
-        "outputs": [
+                "type": "address"
+            },
             {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
+                "internalType": "address",
+                "name": "initialOwner",
+                "type": "address"
             }
         ],
-        "stateMutability": "view"
+        "stateMutability": "nonpayable",
+        "type": "constructor"
     },
     {
-        "type": "function",
-        "name": "agreements",
         "inputs": [
             {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
             }
         ],
-        "outputs": [
-            {
-                "name": "id",
-                "type": "uint256",
-                "internalType": "uint256"
-            },
-            {
-                "name": "provider",
-                "type": "address",
-                "internalType": "address"
-            },
-            {
-                "name": "requester",
-                "type": "address",
-                "internalType": "address"
-            },
-            {
-                "name": "terms",
-                "type": "string",
-                "internalType": "string"
-            },
-            {
-                "name": "deadline",
-                "type": "uint256",
-                "internalType": "uint256"
-            },
-            {
-                "name": "status",
-                "type": "uint8",
-                "internalType": "uint8"
-            }
-        ],
-        "stateMutability": "view"
+        "name": "OwnableInvalidOwner",
+        "type": "error"
     },
     {
-        "type": "function",
-        "name": "cancelAgreement",
         "inputs": [
             {
-                "name": "_agreementId",
-                "type": "uint256",
-                "internalType": "uint256"
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
             }
         ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
+        "name": "OwnableUnauthorizedAccount",
+        "type": "error"
     },
     {
-        "type": "function",
-        "name": "completeAgreement",
+        "anonymous": false,
         "inputs": [
             {
-                "name": "_agreementId",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "createListing",
-        "inputs": [
-            {
-                "name": "_skillName",
-                "type": "string",
-                "internalType": "string"
-            },
-            {
-                "name": "_description",
-                "type": "string",
-                "internalType": "string"
-            },
-            {
-                "name": "_offerType",
-                "type": "bool",
-                "internalType": "bool"
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "depositEscrow",
-        "inputs": [
-            {
-                "name": "_agreementId",
-                "type": "uint256",
-                "internalType": "uint256"
-            },
-            {
-                "name": "_amount",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "escrowBalances",
-        "inputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "initiateAgreement",
-        "inputs": [
-            {
-                "name": "_listingId",
-                "type": "uint256",
-                "internalType": "uint256"
-            },
-            {
-                "name": "_terms",
-                "type": "string",
-                "internalType": "string"
-            },
-            {
-                "name": "_deadline",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "listingCounter",
-        "inputs": [],
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "listings",
-        "inputs": [
-            {
-                "name": "",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "outputs": [
-            {
-                "name": "id",
-                "type": "uint256",
-                "internalType": "uint256"
-            },
-            {
-                "name": "userAddress",
-                "type": "address",
-                "internalType": "address"
-            },
-            {
-                "name": "skillName",
-                "type": "string",
-                "internalType": "string"
-            },
-            {
-                "name": "description",
-                "type": "string",
-                "internalType": "string"
-            },
-            {
-                "name": "offerType",
-                "type": "bool",
-                "internalType": "bool"
-            },
-            {
-                "name": "status",
-                "type": "uint8",
-                "internalType": "uint8"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "function",
-        "name": "releaseEscrow",
-        "inputs": [
-            {
-                "name": "_agreementId",
-                "type": "uint256",
-                "internalType": "uint256"
-            }
-        ],
-        "outputs": [],
-        "stateMutability": "nonpayable"
-    },
-    {
-        "type": "function",
-        "name": "token",
-        "inputs": [],
-        "outputs": [
-            {
-                "name": "",
-                "type": "address",
-                "internalType": "contract IERC20"
-            }
-        ],
-        "stateMutability": "view"
-    },
-    {
-        "type": "event",
-        "name": "AgreementCanceled",
-        "inputs": [
-            {
-                "name": "id",
-                "type": "uint256",
                 "indexed": false,
-                "internalType": "uint256"
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
             }
         ],
-        "anonymous": false
-    },
-    {
-        "type": "event",
         "name": "AgreementCompleted",
-        "inputs": [
-            {
-                "name": "id",
-                "type": "uint256",
-                "indexed": false,
-                "internalType": "uint256"
-            }
-        ],
-        "anonymous": false
+        "type": "event"
     },
     {
-        "type": "event",
-        "name": "AgreementInitiated",
+        "anonymous": false,
         "inputs": [
             {
-                "name": "id",
-                "type": "uint256",
                 "indexed": false,
-                "internalType": "uint256"
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
             },
             {
+                "indexed": false,
+                "internalType": "address",
                 "name": "provider",
-                "type": "address",
-                "indexed": false,
-                "internalType": "address"
+                "type": "address"
             },
             {
-                "name": "requester",
-                "type": "address",
                 "indexed": false,
-                "internalType": "address"
+                "internalType": "address",
+                "name": "requester",
+                "type": "address"
             }
         ],
-        "anonymous": false
+        "name": "AgreementCreated",
+        "type": "event"
     },
     {
-        "type": "event",
-        "name": "ListingCreated",
+        "anonymous": false,
         "inputs": [
             {
+                "indexed": false,
+                "internalType": "uint256",
                 "name": "id",
-                "type": "uint256",
-                "indexed": false,
-                "internalType": "uint256"
+                "type": "uint256"
             },
             {
-                "name": "userAddress",
-                "type": "address",
-                "indexed": true,
-                "internalType": "address"
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "agreementId",
+                "type": "uint256"
             },
             {
-                "name": "skillName",
-                "type": "string",
                 "indexed": false,
-                "internalType": "string"
+                "internalType": "address",
+                "name": "initiator",
+                "type": "address"
             }
         ],
-        "anonymous": false
+        "name": "DisputeRaised",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "favoredProvider",
+                "type": "bool"
+            }
+        ],
+        "name": "DisputeResolved",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "userAddress",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "skillName",
+                "type": "string"
+            }
+        ],
+        "name": "ListingCreated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "recipient",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            }
+        ],
+        "name": "NFTMinted",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "positive",
+                "type": "bool"
+            }
+        ],
+        "name": "ReputationUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "enum SkillExchange.RequestStatus",
+                "name": "status",
+                "type": "uint8"
+            }
+        ],
+        "name": "RequestStatusUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "listingId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "requester",
+                "type": "address"
+            }
+        ],
+        "name": "ServiceRequested",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "agreementCounter",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "agreements",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "requestId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "provider",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "requester",
+                "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "providerConfirmed",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "requesterConfirmed",
+                "type": "bool"
+            },
+            {
+                "internalType": "enum SkillExchange.AgreementStatus",
+                "name": "status",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_agreementId",
+                "type": "uint256"
+            }
+        ],
+        "name": "confirmCompletion",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_skillName",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_description",
+                "type": "string"
+            }
+        ],
+        "name": "createListing",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_agreementId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "depositEscrow",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "disputeCounter",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "disputes",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "agreementId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "initiator",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "reason",
+                "type": "string"
+            },
+            {
+                "internalType": "bool",
+                "name": "resolved",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "favoredProvider",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "escrowBalances",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserReputation",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "positive",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "negative",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "total",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "listingCounter",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "listings",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "userAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "skillName",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+            },
+            {
+                "internalType": "bool",
+                "name": "isAvailable",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_agreementId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_reason",
+                "type": "string"
+            }
+        ],
+        "name": "raiseDispute",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "requestCounter",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_listingId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_description",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_deadline",
+                "type": "uint256"
+            }
+        ],
+        "name": "requestService",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "requests",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "listingId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "requester",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "description",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "deadline",
+                "type": "uint256"
+            },
+            {
+                "internalType": "enum SkillExchange.RequestStatus",
+                "name": "status",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_disputeId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "_favorProvider",
+                "type": "bool"
+            }
+        ],
+        "name": "resolveDispute",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_requestId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "_accept",
+                "type": "bool"
+            }
+        ],
+        "name": "respondToRequest",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "token",
+        "outputs": [
+            {
+                "internalType": "contract IERC20",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "userReputations",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "positivePoints",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "negativePoints",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     }
 ]
