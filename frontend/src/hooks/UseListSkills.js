@@ -26,11 +26,24 @@ const useListSkills = () => {
       setLoading(true)
       setError(null)
 
+
+
+
       const skillListingContractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE
       try {
         const contract = new ethers.Contract(skillListingContractAddress, ABI, signer)
 
-        const tx = await contract.createListing(skillName, description)
+
+        const estimatedGas = await contract.createListing.estimateGas(
+          skillName,
+          description
+        );
+
+
+        const tx = await contract.createListing(skillName, description, {
+          gasLimit: (estimatedGas * BigInt(120)) / BigInt(100),
+        }
+        )
 
         const receipt = await tx.wait()
 

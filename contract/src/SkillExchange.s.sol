@@ -76,6 +76,10 @@ contract SkillExchange is Ownable /* , ERC721 */ {
     mapping(address => UserReputation) public userReputations;
     mapping(uint256 => uint256) public escrowBalances;
 
+    ServiceRequest[] allRequest;
+    
+    SkillListing[] allListings;
+
     uint256 public listingCounter;
     uint256 public requestCounter;
     uint256 public agreementCounter;
@@ -103,6 +107,9 @@ contract SkillExchange is Ownable /* , ERC721 */ {
         string memory _skillName,
         string memory _description
     ) public {
+
+        listingCounter++;
+
         listings[listingCounter] = SkillListing(
             listingCounter,
             msg.sender,
@@ -110,8 +117,16 @@ contract SkillExchange is Ownable /* , ERC721 */ {
             _description,
             true
         );
+
+        allListings.push(SkillListing(
+            listingCounter,
+            msg.sender,
+            _skillName,
+            _description,
+            true
+        ))
         emit ListingCreated(listingCounter, msg.sender, _skillName);
-        listingCounter++;
+        
     }
 
     function requestService(
@@ -125,17 +140,32 @@ contract SkillExchange is Ownable /* , ERC721 */ {
             "Cannot request own service"
         );
 
-        requests[requestCounter] = ServiceRequest(
-            requestCounter,
-            _listingId,
-            msg.sender,
-            _description,
-            _deadline,
-            RequestStatus.Pending
-        );
+        // requests[requestCounter] = ServiceRequest(
+        //     requestCounter,
+        //     _listingId,
+        //     msg.sender,
+        //     _description,
+        //     _deadline,
+        //     RequestStatus.Pending
+        // );
+
+        ServiceRequest memory newRequest;
+
+        requestCounter++;
+
+        newRequest.requester = msg.sender;
+        newRequest.listingId = _listingId;
+        newRequest.description = _description;
+        newRequest.status = RequestStatus.Pending;
+        newRequest.id = requestCounter
+        newRequest.deadline = _deadline;
+        
+        requests[requestCounter] = newRequest;
+
+        allRequest.push(newRequest);
 
         emit ServiceRequested(requestCounter, _listingId, msg.sender);
-        requestCounter++;
+        
     }
 
     function respondToRequest(uint256 _requestId, bool _accept) public {
@@ -308,6 +338,17 @@ contract SkillExchange is Ownable /* , ERC721 */ {
                 "Token transfer failed"
             );
         }
+    }
+
+    function getAllListings() external view returns(SkillListing[]) {
+        require(msg.sender != address(0), "Not callable by address zero");
+        return allListings;
+    }
+
+
+    function getAllRequests() external view returns(ServiceRequest[]) {
+        require(msg.sender != address(0), "Not callable by address zero");
+        return allRequest;
     }
 
     function getUserReputation(

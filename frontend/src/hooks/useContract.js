@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Contract } from 'ethers';
-import useSignerOrProvider from './useSignerOrProvider';
+import useSignerOrProvider from './UseSignerOrProvider';
 
 const useContract = (address, abi) => {
   const [contract, setContract] = useState(null);
@@ -11,6 +11,8 @@ const useContract = (address, abi) => {
     if (address && abi) {
       try {
         const contractProvider = signer || provider || readOnlyProvider;
+        console.log({signer})
+        
         const contractInstance = new Contract(address, abi, contractProvider);
         setContract(contractInstance);
         setError(null);

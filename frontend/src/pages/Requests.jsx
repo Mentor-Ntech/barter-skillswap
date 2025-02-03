@@ -1,126 +1,179 @@
-import { useState } from "react"
-import { PlusCircle } from "lucide-react"
-import Badge from "../components/ui/Badge"
-import Card from "../components/ui/Card"
-import Button from "../components/ui/Button"
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import Badge from "../components/ui/Badge";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import { ethers } from "ethers";
+import ABI from "../abis/SkillExchange.json";
+import { useAppKitAccount } from "@reown/appkit/react";
+import useSignerOrProvider from "../hooks/UseSignerOrProvider";
 
 const Requests = () => {
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      title: "DApp Frontend Development",
-      requester: "0x1234...5678",
-      skill: "React Development",
-      budget: 0.5,
-      deadline: "2023-07-30",
-      status: "Open",
-    },
-    {
-      id: 2,
-      title: "Smart Contract Audit",
-      requester: "0xabcd...efgh",
-      skill: "Solidity",
-      budget: 0.3,
-      deadline: "2023-07-15",
-      status: "In Progress",
-    },
-    {
-      id: 3,
-      title: "Tokenomics Design",
-      requester: "0x2345...6789",
-      skill: "Token Economics",
-      budget: 0.2,
-      deadline: "2023-07-20",
-      status: "Completed",
-    },
-  ])
+  const [requests, setRequests] = useState([]);
+  const [userRequests, setUserRequests] = useState([]);
+  const [showUserRequests, setShowUserRequests] = useState(false);
+  const { provider } = useSignerOrProvider();
+  const { address } = useAppKitAccount();
 
-  const [showModal, setShowModal] = useState(false)
+  const fetchRequestsAndListings = async () => {
+
+    console.log({provider});
+
+    if (!provider) {
+      console.log("Provider not available yet");
+      return;
+    }
+
+    const contractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE;
+    try {
+      const contract = new ethers.Contract(contractAddress, ABI, provider);
+
+      // Fetch all requests and listings
+      const allRequests = await contract.getAllRequests();
+      const allListings = await contract.getAllListings();
+
+      console.log({allRequests});
+      console.log({allListings})
+
+      // Format requests and include skill from listings
+      const formattedRequests = allRequests.map((request) => {
+        // Find the corresponding listing for the request
+        const listing = allListings.find(
+          (listing) => Number(listing.id).toString() === Number(request.listingId).toString()
+        );
+
+        return {
+          id: Number(request.id).toString(),
+          title: request.description, // Assuming description is used as the title
+          requester: request.requester,
+          skill: listing ? listing.skillName : "Unknown Skill", // Get skill from listing
+          deadline: new Date(Number(request.deadline) * 1000).toLocaleDateString(), // Convert timestamp to date
+          description: request.description,
+          status:
+            Number(request.status) === 0
+              ? "Open"
+              :Number(request.status)=== 1
+              ? "In Progress"
+              : "Completed",
+        };
+      });
+
+      setRequests(formattedRequests);
+
+      // Filter requests created by the user
+      if (address) {
+        const userRequests = formattedRequests.filter(
+          (request) => request.requester.toLowerCase() === address.toLowerCase()
+        );
+        setUserRequests(userRequests);
+      }
+    } catch (err) {
+      console.error("Error fetching requests and listings:", err);
+      toast.error("Failed to fetch requests and listings");
+    }
+  };
+
+  useEffect(() => {
+    if (provider) {
+      fetchRequestsAndListings();
+    }
+  }, [provider, address]);
+
+  const toggleUserRequests = () => {
+    setShowUserRequests(!showUserRequests);
+  };
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Service Requests</h2>
-        <Button onClick={() => setShowModal(true)}>
-          <PlusCircle className="w-4 h-4 mr-2" />
-          Create New Request
-        </Button>
-      </div>
-      <div className="grid gap-6">
-        {requests.map((request) => (
-          <RequestCard key={request.id} request={request} />
-        ))}
-      </div>
-
-      {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div className="mt-3 text-center">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Create New Service Request</h3>
-              <div className="mt-2 px-7 py-3">
-                <input type="text" placeholder="Title" className="mb-3 px-3 py-2 border rounded w-full" />
-                <input type="text" placeholder="Skill Required" className="mb-3 px-3 py-2 border rounded w-full" />
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Budget (ETH)"
-                  className="mb-3 px-3 py-2 border rounded w-full"
-                />
-                <input type="date" placeholder="Deadline" className="mb-3 px-3 py-2 border rounded w-full" />
-                <textarea placeholder="Description" className="mb-3 px-3 py-2 border rounded w-full"></textarea>
-              </div>
-              <div className="items-center px-4 py-3">
-                <Button onClick={() => setShowModal(false)} className="w-full">
-                  Submit Request
-                </Button>
-              </div>
-            </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-blue-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header Section */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 mb-8 shadow-lg">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Service Requests</h2>
+            <Button
+              onClick={toggleUserRequests}
+              className="w-full sm:w-auto bg-white text-blue-600 hover:bg-gray-100"
+            >
+              {showUserRequests ? "Show All Requests" : "Show My Requests"}
+            </Button>
           </div>
         </div>
-      )}
+
+        {/* Requests Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {(showUserRequests ? userRequests : requests).map((request) => (
+            <RequestCard key={request.id} request={request} />
+          ))}
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 const RequestCard = ({ request }) => {
   const statusColors = {
-    Open: "green",
-    "In Progress": "blue",
-    Completed: "gray",
-  }
+    Open: "bg-green-100 text-green-800",
+    "In Progress": "bg-blue-100 text-blue-800",
+    Completed: "bg-gray-100 text-gray-800",
+  };
 
   return (
-    <Card>
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-xl font-semibold">{request.title}</h3>
-          <p className="text-gray-600">Request #{request.id}</p>
+    <Card className="flex flex-col h-full transition-transform transform hover:scale-105 hover:shadow-lg border border-gray-200">
+      <div className="p-6 flex flex-col h-full">
+        {/* Card Header */}
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-xl font-bold text-gray-900 truncate">
+              {request.title}
+            </h3>
+            <p className="text-sm text-gray-500">Request #{request.id}</p>
+          </div>
+          <Badge className={`${statusColors[request.status]} px-3 py-1 text-sm font-semibold`}>
+            {request.status}
+          </Badge>
         </div>
-        <Badge color={statusColors[request.status]}>{request.status}</Badge>
-      </div>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <p className="text-sm text-gray-500">Requester</p>
-          <p className="font-semibold">{request.requester}</p>
+
+        {/* Card Body */}
+        <div className="space-y-4 mb-6">
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Skill Required</p>
+            <p className="text-sm text-gray-900 font-semibold">
+              {request.skill}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Requester</p>
+            <p className="text-sm text-gray-900 font-semibold">
+              {request.requester}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Deadline</p>
+            <p className="text-sm text-gray-900 font-semibold">
+              {request.deadline}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Description</p>
+            <p className="text-sm text-gray-900 line-clamp-3">
+              {request.description}
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm text-gray-500">Skill Required</p>
-          <p className="font-semibold">{request.skill}</p>
+
+        {/* Card Footer */}
+        <div className="mt-auto">
+          <Button
+            variant="secondary"
+            className="w-full bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-600"
+          >
+            View Details
+          </Button>
         </div>
-        <div>
-          <p className="text-sm text-gray-500">Budget (ETH)</p>
-          <p className="font-semibold">{request.budget} ETH</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Deadline</p>
-          <p className="font-semibold">{request.deadline}</p>
-        </div>
-      </div>
-      <div className="flex justify-end">
-        <Button variant="secondary">View Details</Button>
       </div>
     </Card>
-  )
-}
+  );
+};
 
-export default Requests
+export default Requests;
