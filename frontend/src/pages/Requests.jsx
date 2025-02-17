@@ -7,26 +7,31 @@ import { ethers } from "ethers";
 import ABI from "../abis/SkillExchange.json";
 import { useAppKitAccount } from "@reown/appkit/react";
 import useSignerOrProvider from "../hooks/UseSignerOrProvider";
+import useRequestAccetDecline from "../hooks/useRequestAccetDecline";
+
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
   const [userRequests, setUserRequests] = useState([]);
   const [showUserRequests, setShowUserRequests] = useState(false);
-  const { provider } = useSignerOrProvider();
+  const { readOnlyProvider, signer } = useSignerOrProvider();
   const { address } = useAppKitAccount();
+  const { acceptDeeclineService, loading, error } = useRequestAccetDecline()
+
+  
 
   const fetchRequestsAndListings = async () => {
 
-    console.log({provider});
+    console.log({readOnlyProvider});
 
-    if (!provider) {
+    if (!readOnlyProvider) {
       console.log("Provider not available yet");
       return;
     }
 
     const contractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE;
     try {
-      const contract = new ethers.Contract(contractAddress, ABI, provider);
+      const contract = new ethers.Contract(contractAddress, ABI, readOnlyProvider);
 
       // Fetch all requests and listings
       const allRequests = await contract.getAllRequests();
@@ -73,11 +78,47 @@ const Requests = () => {
     }
   };
 
+
+  const handleRequestAcceptDecline = async (requestId, status) => {
+
+
+console.log({requestId})
+    let requestStatus;
+
+    if(status === true) {
+      requestStatus = true;
+    }else {
+      requestStatus = false;
+    }
+
+
+    if (!signer) {
+
+      toast.error("Please connect your wallet");
+      return;
+    }
+    try {
+
+      await acceptDeeclineService(requestId, requestStatus)
+      
+      toast.success("Error responding to request");
+      // setShowRequestModal(false);
+    } catch (err) {
+      console.error("Error responding to request:", err);
+      toast.error("Failed to respond to request");
+    }
+
+  };
+
+
+
+
+
   useEffect(() => {
-    if (provider) {
+    if (readOnlyProvider) {
       fetchRequestsAndListings();
     }
-  }, [provider, address]);
+  }, [readOnlyProvider, address]);
 
   const toggleUserRequests = () => {
     setShowUserRequests(!showUserRequests);
@@ -102,7 +143,7 @@ const Requests = () => {
         {/* Requests Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(showUserRequests ? userRequests : requests).map((request) => (
-            <RequestCard key={request.id} request={request} />
+            <RequestCard handleRequestAcceptDecline={handleRequestAcceptDecline} key={request.id} request={request} />
           ))}
         </div>
       </div>
@@ -110,12 +151,94 @@ const Requests = () => {
   );
 };
 
-const RequestCard = ({ request }) => {
+// const RequestCard = ({ request }) => {
+//   const statusColors = {
+//     Open: "bg-green-100 text-green-800",
+//     "In Progress": "bg-blue-100 text-blue-800",
+//     Completed: "bg-gray-100 text-gray-800",
+//   };
+  
+//   return (
+//     <Card className="flex flex-col h-full transition-transform transform hover:scale-105 hover:shadow-lg border border-gray-200">
+//       <div className="p-6 flex flex-col h-full">
+//         {/* Card Header */}
+//         <div className="flex justify-between items-start mb-4">
+//           <div className="flex-1 min-w-0">
+//             <h3 className="text-xl font-bold text-gray-900 truncate">
+//               {request.title}
+//             </h3>
+//             <p className="text-sm text-gray-500">Request #{request.id}</p>
+//           </div>
+//           <Badge className={`${statusColors[request.status]} px-3 py-1 text-sm font-semibold`}>
+//             {request.status}
+//           </Badge>
+//         </div>
+
+//         {/* Card Body */}
+//         <div className="space-y-4 mb-6">
+//           <div>
+//             <p className="text-sm text-gray-500 font-medium">Skill Required</p>
+//             <p className="text-sm text-gray-900 font-semibold">
+//               {request.skill}
+//             </p>
+//           </div>
+
+//           <div>
+//             <p className="text-sm text-gray-500 font-medium">Requester</p>
+//             <p className="text-sm text-gray-900 font-semibold">
+//               {request.requester}
+//             </p>
+//           </div>
+//           <div>
+//             <p className="text-sm text-gray-500 font-medium">Deadline</p>
+//             <p className="text-sm text-gray-900 font-semibold">
+//               {request.deadline}
+//             </p>
+//           </div>
+//           <div>
+//             <p className="text-sm text-gray-500 font-medium">Description</p>
+//             <p className="text-sm text-gray-900 line-clamp-3">
+//               {request.description}
+//             </p>
+//           </div>
+//         </div>
+
+//         {/* Card Footer */}
+//         <div className="mt-auto">
+//           <Button
+//             variant="secondary"
+//             className="w-full bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-600"
+//           >
+//             View Details
+//           </Button>
+//         </div>
+//       </div>
+//     </Card>
+//   );
+// };
+
+const RequestCard = ({handleRequestAcceptDecline, request }) => {
+
+
+ 
+
+
+
+
   const statusColors = {
     Open: "bg-green-100 text-green-800",
     "In Progress": "bg-blue-100 text-blue-800",
     Completed: "bg-gray-100 text-gray-800",
   };
+
+
+
+
+  
+
+
+
+
 
   return (
     <Card className="flex flex-col h-full transition-transform transform hover:scale-105 hover:shadow-lg border border-gray-200">
@@ -162,13 +285,19 @@ const RequestCard = ({ request }) => {
           </div>
         </div>
 
-        {/* Card Footer */}
-        <div className="mt-auto">
+        {/* Card Footer with Accept and Decline Buttons */}
+        <div className="mt-auto flex space-x-4">
           <Button
-            variant="secondary"
-            className="w-full bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-600"
+            onClick={() => handleRequestAcceptDecline(request.id, true)}
+            className="w-full bg-green-500 hover:bg-green-600 text-white"
           >
-            View Details
+            Accept
+          </Button>
+          <Button
+            onClick={() => handleRequestAcceptDecline(request.id, false)}
+            className="w-full bg-red-500 hover:bg-red-600 text-white"
+          >
+            Decline
           </Button>
         </div>
       </div>

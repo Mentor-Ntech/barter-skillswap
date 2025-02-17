@@ -1,30 +1,71 @@
-import { useState, useEffect } from 'react';
-import { Contract } from 'ethers';
-import useSignerOrProvider from './UseSignerOrProvider';
+// import { useMemo } from "react";
+// import useSignerOrProvider from "./UseSignerOrProvider";
+// import { Contract } from "ethers";
+// import ABI from "../abis/SkillExchange.json";
 
-const useContract = (address, abi) => {
-  const [contract, setContract] = useState(null);
-  const [error, setError] = useState(null);
-  const { signer, provider, readOnlyProvider } = useSignerOrProvider();
+// const useContract = (withSigner = false) => {
+//   const { signer, readOnlyProvider } = useSignerOrProvider();
 
-  useEffect(() => {
-    if (address && abi) {
-      try {
-        const contractProvider = signer || provider || readOnlyProvider;
-        console.log({signer})
-        
-        const contractInstance = new Contract(address, abi, contractProvider);
-        setContract(contractInstance);
-        setError(null);
-      } catch (err) {
-        console.error("Error creating contract instance:", err);
-        setError(err.message);
-        setContract(null);
+//   return useMemo(() => {
+//     if (withSigner) {
+//       if (!signer) return null;
+//       return new Contract(
+//         import.meta.env.VITE_APP_SKILL_EXCHANGE,
+//         ABI,
+//         signer
+//       );
+//     }
+
+//     return new Contract(
+//       import.meta.env.VITE_APP_SKILL_EXCHANGE,
+//       ABI,
+//       readOnlyProvider
+//     );
+//   }, [signer, readOnlyProvider, withSigner]);
+// };
+
+// export default useContract;
+
+
+
+
+// Update code
+import { useMemo } from "react";
+import useSignerOrProvider from "./UseSignerOrProvider";
+import { Contract } from "ethers";
+import ABI from "../abis/SkillExchange.json";
+
+const useContract = (withSigner = false) => {
+  const { signer, readOnlyProvider } = useSignerOrProvider();
+
+  return useMemo(() => {
+    try {
+      const contractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE;
+
+      if (!contractAddress) {
+        console.error("Contract address is not defined in environment variables.");
+        return null;
       }
-    }
-  }, [address, abi, signer, provider, readOnlyProvider]);
 
-  return { contract, error };
+      if (withSigner) {
+        if (!signer) {
+          console.warn("Signer is not available. Cannot create contract with signer.");
+          return null;
+        }
+        return new Contract(contractAddress, ABI, signer);
+      }
+
+      if (!readOnlyProvider) {
+        console.warn("Read-only provider is not available. Cannot create contract.");
+        return null;
+      }
+
+      return new Contract(contractAddress, ABI, readOnlyProvider);
+    } catch (error) {
+      console.error("Failed to create contract instance:", error);
+      return null;
+    }
+  }, [signer, readOnlyProvider, withSigner]);
 };
 
 export default useContract;

@@ -181,6 +181,8 @@
 // export default Listings
 
 
+// Here is the Original code
+
 import { useState, useEffect, useCallback } from "react"
 import { PlusCircle } from "lucide-react"
 import { ethers } from "ethers"
@@ -201,7 +203,7 @@ const Listings = () => {
   const [selectedListing, setSelectedListing] = useState(null);
   const { createListing, loading, error } = useListSkill();
   const { requestService} = useRequestService()
-  const { provider, signer, readOnlyProvider } = useSignerOrProvider();
+  const {readOnlyProvider, signer} = useSignerOrProvider();
 
 
   const [newListing, setNewListing] = useState({
@@ -210,7 +212,7 @@ const Listings = () => {
   });
 
   const fetchListings = useCallback(async () => {
-    if (!provider) {
+    if (!readOnlyProvider) {
       console.log("Provider not available yet");
       return;
     }
@@ -220,7 +222,7 @@ const Listings = () => {
       const contract = new ethers.Contract(
         skillListingContractAddress,
         ABI,
-        provider
+        readOnlyProvider
       );
       const listings = await contract.getAllListings();
 
@@ -236,13 +238,13 @@ const Listings = () => {
       console.error("Error fetching listings:", err);
       toast.error("Failed to fetch listings");
     }
-  }, [provider]);
+  }, [readOnlyProvider]);
 
   useEffect(() => {
-    if (provider) {
+    if (readOnlyProvider) {
       fetchListings();
     }
-  }, [provider, fetchListings]);
+  }, [readOnlyProvider, fetchListings]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -267,8 +269,8 @@ const Listings = () => {
     }
   };
 
-  const handleRequestClick = (listing) => {
-    setSelectedListing(listing);
+  const handleRequestClick = (listing, setListings) => {
+    setSelectedListing(listing, setListings);
     setShowRequestModal(true);
   };
 
@@ -311,7 +313,7 @@ const Listings = () => {
               listing={listing}
               onRequestClick={handleRequestClick}
             />
-          ))}
+          ))} 
         </div>
 
         {showCreateModal && (
@@ -447,4 +449,5 @@ const ListingCard = ({ listing, onRequestClick }) => {
   );
 };
 export default Listings
+
 
