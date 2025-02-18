@@ -38,6 +38,7 @@ import ABI from "../abis/SkillExchange.json";
 const useContract = (withSigner = false) => {
   const { signer, readOnlyProvider } = useSignerOrProvider();
 
+  
   return useMemo(() => {
     try {
       const contractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE;

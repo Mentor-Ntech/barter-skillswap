@@ -1,188 +1,3 @@
-// import { useState, useEffect, useCallback } from "react"
-// import { PlusCircle } from "lucide-react"
-// import { ethers } from "ethers"
-// import { toast } from "react-toastify"
-// import Badge from "../components/ui/Badge"
-// import Card from "../components/ui/Card"
-// import Button from "../components/ui/Button"
-// import useListSkill from "../hooks/UseListSkills"
-// import useSignerOrProvider from "../hooks/UseSignerOrProvider"
-// import ABI from "../abis/SkillExchange.json"
-
-// const Listings = () => {
-//   const [listings, setListings] = useState([])
-//   const [showModal, setShowModal] = useState(false)
-//   const { createListing, loading, error } = useListSkill()
-//   const { provider, signer } = useSignerOrProvider()
-
-//   const [newListing, setNewListing] = useState({
-//     title: "",
-//     skill: "",
-//     description: "",
-//   })
-
-//   const fetchListings = useCallback(async () => {
-//     if (!provider) {
-//       console.log("Provider not available yet")
-//       return
-//     }
-
-//     const skillListingContractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE
-//     try {
-//       const contract = new ethers.Contract(skillListingContractAddress, ABI, provider)
-//       const listingCount = await contract.listingCounter()
-//       const fetchedListings = []
-
-//       for (let i = 0; i < listingCount; i++) {
-//         const listing = await contract.listings(i)
-//         fetchedListings.push({
-//           id: listing.id.toString(),
-//           title: listing.skillName,
-//           creator: listing.userAddress,
-//           skill: listing.skillName,
-//           description: listing.description,
-//           status: listing.isAvailable ? "Available" : "Sold",
-//         })
-//       }
-
-//       setListings(fetchedListings)
-//     } catch (err) {
-//       console.error("Error fetching listings:", err)
-//       toast.error("Failed to fetch listings")
-//     }
-//   }, [provider])
-
-//   useEffect(() => {
-//     if (provider) {
-//       fetchListings()
-//     }
-//   }, [provider, fetchListings])
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target
-//     setNewListing((prev) => ({ ...prev, [name]: value }))
-//   }
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault()
-//     if (!signer) {
-//       toast.error("Please connect your wallet")
-//       return
-//     }
-//     try {
-//       await createListing(newListing.title, newListing.description)
-//       setShowModal(false)
-//       setNewListing({ title: "", skill: "", description: "" })
-//       fetchListings() // Refresh the listings
-//     } catch (err) {
-//       console.error("Error creating listing:", err)
-//       toast.error("Failed to create listing")
-//     }
-//   }
-
-//   return (
-//     <div className="space-y-6 p-6">
-//       <div className="flex justify-between items-center">
-//         <h2 className="text-3xl font-bold">Listings</h2>
-//         <Button onClick={() => setShowModal(true)}>
-//           <PlusCircle className="w-4 h-4 mr-2" />
-//           Create New Listing
-//         </Button>
-//       </div>
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 text-center">
-//         {listings.map((listing) => (
-//           <ListingCard key={listing.id} listing={listing} />
-//         ))}
-//       </div>
-
-//       {showModal && (
-//         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
-//           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-//             <div className="mt-3 text-center">
-//               <h3 className="text-lg leading-6 font-medium text-gray-900">Create New Listing</h3>
-//               <form onSubmit={handleSubmit} className="mt-2 px-7 py-3">
-//                 <input
-//                   type="text"
-//                   name="title"
-//                   value={newListing.title}
-//                   onChange={handleInputChange}
-//                   placeholder="Title"
-//                   className="mb-3 px-3 py-2 border rounded w-full"
-//                   required
-//                 />
-//                 <input
-//                   type="text"
-//                   name="skill"
-//                   value={newListing.skill}
-//                   onChange={handleInputChange}
-//                   placeholder="Skill Required"
-//                   className="mb-3 px-3 py-2 border rounded w-full"
-//                   required
-//                 />
-//                 <textarea
-//                   name="description"
-//                   value={newListing.description}
-//                   onChange={handleInputChange}
-//                   placeholder="Description"
-//                   className="mb-3 px-3 py-2 border rounded w-full text-color:red"
-//                   required
-//                 ></textarea>
-//                 <div className="items-center px-4 py-3">
-//                   <Button type="submit" className="w-full" disabled={loading || !signer}>
-//                     {loading ? "Creating..." : "Submit Listing"}
-//                   </Button>
-//                 </div>
-//               </form>
-//               {error && <p className="text-red-500 mt-2">{error}</p>}
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   )
-// }
-
-// const ListingCard = ({ listing }) => {
-//   const statusColors = {
-//     Available: "green",
-//     Sold: "gray",
-//   }
-
-//   return (
-//     <Card className="p-4 border rounded-md shadow-md">
-//       <div className="flex justify-between items-start mb-4">
-//         <div>
-//           <h3 className="text-xl font-semibold">{listing.title}</h3>
-//           <p className="text-gray-600">Listing #{listing.id}</p>
-//         </div>
-//         <Badge color={statusColors[listing.status]}>{listing.status}</Badge>
-//       </div>
-//       <div className="grid grid-cols-1 gap-4 mb-4">
-//         <div>
-//           <p className="text-sm text-gray-500">Creator</p>
-//           <p className="font-semibold">{listing.creator}</p>
-//         </div>
-//         <div>
-//           <p className="text-sm text-gray-500">Skill Required</p>
-//           <p className="font-semibold">{listing.skill}</p>
-//         </div>
-//         <div>
-//           <p className="text-sm text-gray-500">Description</p>
-//           <p className="font-semibold">{listing.description}</p>
-//         </div>
-//       </div>
-//       <div className="flex justify-end">
-//         <Button variant="secondary">View Details</Button>
-//       </div>
-//     </Card>
-//   )
-// }
-
-// export default Listings
-
-
-// Here is the Original code
-
 import { useState, useEffect, useCallback } from "react"
 import { PlusCircle } from "lucide-react"
 import { ethers } from "ethers"
@@ -202,9 +17,8 @@ const Listings = () => {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
   const { createListing, loading, error } = useListSkill();
-  const { requestService} = useRequestService()
-  const {readOnlyProvider, signer} = useSignerOrProvider();
-
+  const { requestService } = useRequestService()
+  const { readOnlyProvider, signer } = useSignerOrProvider();
 
   const [newListing, setNewListing] = useState({
     skill: "",
@@ -212,39 +26,48 @@ const Listings = () => {
   });
 
   const fetchListings = useCallback(async () => {
-    if (!readOnlyProvider) {
-      console.log("Provider not available yet");
+    if (!signer && !readOnlyProvider) {
+      console.log("Neither signer nor provider available");
       return;
     }
 
     const skillListingContractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE;
     try {
+      // Use signer if available, otherwise fall back to readOnlyProvider
+      const contractProvider = signer || readOnlyProvider;
       const contract = new ethers.Contract(
         skillListingContractAddress,
         ABI,
-        readOnlyProvider
+        contractProvider
       );
-      const listings = await contract.getAllListings();
-
       
+      // First check if the contract is properly instantiated
+      if (!contract.address) {
+        // throw new Error("Contract not properly initialized");
+      }
+
+      const listings = await contract.getAllListings();
       
       if (listings) {
-
         console.log({listings});
-
         setListings(listings);
       }
     } catch (err) {
-      console.error("Error fetching listings:", err);
-      toast.error("Failed to fetch listings");
+      // console.error("Error fetching listings:", err);
+      if (err.reason === "Not callable by address zero") {
+        toast.error("Please connect your wallet to view listings");
+      } else {
+        toast.error("Failed to fetch listings: " + (err.reason || err.message));
+      }
     }
-  }, [readOnlyProvider]);
+  }, [readOnlyProvider, signer]);
 
   useEffect(() => {
-    if (readOnlyProvider) {
+    // Only fetch if we have either a signer or provider
+    if (signer || readOnlyProvider) {
       fetchListings();
     }
-  }, [readOnlyProvider, fetchListings]);
+  }, [signer, readOnlyProvider, fetchListings]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -254,10 +77,10 @@ const Listings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!signer) {
-
       toast.error("Please connect your wallet");
       return;
     }
+    console.log({createListing})
     try {
       await createListing(newListing.skill, newListing.description);
       setShowCreateModal(false);
@@ -285,7 +108,7 @@ const Listings = () => {
       toast.success("Service requested successfully");
       setShowRequestModal(false);
     } catch (err) {
-      console.error("Error requesting service:", err);
+      // console.error("Error requesting service:", err);
       toast.error("Failed to request service");
     }
   };
@@ -320,12 +143,10 @@ const Listings = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg w-full max-w-md overflow-hidden shadow-xl">
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-white mb-4 bg">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
                   Create New Listing
                 </h3>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                 
-                  
                   <div>
                     <input
                       type="text"
@@ -365,10 +186,9 @@ const Listings = () => {
                       {loading ? "Creating..." : "Submit Listing"}
                     </Button>
                   </div>
-                  {error && (
-                    <p className="text-red-500 text-sm mt-2">{error}</p>
-                  )}
+
                 </form>
+                
               </div>
             </div>
           </div>
@@ -392,19 +212,15 @@ const ListingCard = ({ listing, onRequestClick }) => {
     Sold: "bg-gray-100 text-gray-800",
   };
 
-
-  
-
   return (
     <Card className="flex flex-col h-full transition-transform transform hover:scale-105 hover:shadow-lg">
       <div className="p-6 flex flex-col h-full">
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1 min-w-0">
-           
             <p className="text-sm text-gray-500">Listing #{Number(listing.id)}</p>
           </div>
           <Badge className={`${statusColors[listing.isAvailable]} px-3 py-1 text-sm font-semibold`}>
-            {listing.isAvailable }
+            {listing.isAvailable}
           </Badge>
         </div>
 
@@ -448,6 +264,5 @@ const ListingCard = ({ listing, onRequestClick }) => {
     </Card>
   );
 };
-export default Listings
 
-
+export default Listings;

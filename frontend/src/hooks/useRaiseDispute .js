@@ -4,9 +4,10 @@ import useContract from "./useContract";
 import ABI from "../abis/SkillExchange.json";
 
 const useRaiseDispute = () => {
-  const [loading, setLoading] = useState(false);
+  const [isloading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { contract } = useContract(import.meta.env.VITE_APP_SKILL_EXCHANGE, ABI);
+  const contract = useContract(true);
+
 
   const raiseDispute = useCallback(
     async (agreementId, reason) => {
@@ -24,6 +25,7 @@ const useRaiseDispute = () => {
 
         if (receipt.status === 1) {
           toast.success("Dispute raised successfully!");
+          setLoading(false)
           return receipt.transactionHash;
         } else {
           throw new Error("Transaction failed");
@@ -40,7 +42,7 @@ const useRaiseDispute = () => {
     [contract]
   );
 
-  return { raiseDispute, loading, error };
+  return { raiseDispute, isloading, error };
 };
 
 export default useRaiseDispute;
