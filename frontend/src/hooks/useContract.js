@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Contract } from 'ethers';
-import useSignerOrProvider from './useSignerOrProvider';
+import useSignerOrProvider from './UseSignerOrProvider';
 
 const useContract = (address, abi) => {
   const [contract, setContract] = useState(null);
