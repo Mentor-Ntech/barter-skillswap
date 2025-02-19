@@ -7,7 +7,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 // import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract SkillExchange is Ownable /* , ERC721 */ {
+contract SkillExchange is
+    Ownable /* , ERC721 */
+{
     // using Counters for Counters.Counter;
     // Counters.Counter private _tokenIds;
 
@@ -77,7 +79,10 @@ contract SkillExchange is Ownable /* , ERC721 */ {
     mapping(uint256 => uint256) public escrowBalances;
 
     ServiceRequest[] allRequest;
-    
+
+     Dispute[] allDisputes;
+
+
     SkillListing[] allListings;
 
     uint256 public listingCounter;
@@ -103,11 +108,9 @@ contract SkillExchange is Ownable /* , ERC721 */ {
         token = _token;
     }
 
-    function createListing(
-        string memory _skillName,
-        string memory _description
-    ) public {
-
+    function createListing(string memory _skillName, string memory _description)
+        public
+    {
         listingCounter++;
 
         listings[listingCounter] = SkillListing(
@@ -118,15 +121,16 @@ contract SkillExchange is Ownable /* , ERC721 */ {
             true
         );
 
-        allListings.push(SkillListing(
-            listingCounter,
-            msg.sender,
-            _skillName,
-            _description,
-            true
-        ))
+        allListings.push(
+            SkillListing(
+                listingCounter,
+                msg.sender,
+                _skillName,
+                _description,
+                true
+            )
+        );
         emit ListingCreated(listingCounter, msg.sender, _skillName);
-        
     }
 
     function requestService(
@@ -135,37 +139,24 @@ contract SkillExchange is Ownable /* , ERC721 */ {
         uint256 _deadline
     ) public {
         require(listings[_listingId].isAvailable, "Listing not available");
-        require(
-            listings[_listingId].userAddress != msg.sender,
-            "Cannot request own service"
-        );
 
-        // requests[requestCounter] = ServiceRequest(
-        //     requestCounter,
-        //     _listingId,
-        //     msg.sender,
-        //     _description,
-        //     _deadline,
-        //     RequestStatus.Pending
-        // );
-
-        ServiceRequest memory newRequest;
-
+        // Increment requestCounter first
         requestCounter++;
 
+        // Create the new request
+        ServiceRequest memory newRequest;
+        newRequest.id = requestCounter;
         newRequest.requester = msg.sender;
         newRequest.listingId = _listingId;
         newRequest.description = _description;
         newRequest.status = RequestStatus.Pending;
-        newRequest.id = requestCounter
         newRequest.deadline = _deadline;
-        
-        requests[requestCounter] = newRequest;
 
+        // Save the request to storage
+        requests[requestCounter] = newRequest;
         allRequest.push(newRequest);
 
         emit ServiceRequested(requestCounter, _listingId, msg.sender);
-        
     }
 
     function respondToRequest(uint256 _requestId, bool _accept) public {
@@ -174,6 +165,7 @@ contract SkillExchange is Ownable /* , ERC721 */ {
             listings[request.listingId].userAddress == msg.sender,
             "Not the service provider"
         );
+
         require(request.status == RequestStatus.Pending, "Request not pending");
 
         if (_accept) {
@@ -181,6 +173,13 @@ contract SkillExchange is Ownable /* , ERC721 */ {
             createAgreement(_requestId);
         } else {
             request.status = RequestStatus.Rejected;
+        }
+
+        for (uint256 i = 0; i < allRequest.length; i++) {
+            if (allRequest[i].id == _requestId) {
+                allRequest[i].status = request.status;
+                break;
+            }
         }
 
         emit RequestStatusUpdated(_requestId, request.status);
@@ -230,69 +229,117 @@ contract SkillExchange is Ownable /* , ERC721 */ {
     }
 
     function completeAgreement(uint256 _agreementId) private {
-        Agreement storage agreement = agreements[_agreementId];
-        agreement.status = AgreementStatus.Completed;
+    Agreement storage agreement = agreements[_agreementId];
+    agreement.status = AgreementStatus.Completed;
 
-        // Mint NFT for both parties
-        mintCompletionNFT(agreement.provider);
-        mintCompletionNFT(agreement.requester);
+    // Update the corresponding ServiceRequest status
+    ServiceRequest storage request = requests[agreement.requestId];
+    request.status = RequestStatus.Completed;
 
-        // Update reputations
-        updateReputation(agreement.provider, true);
-        updateReputation(agreement.requester, true);
-
-        // Release escrow if any
-        releaseEscrow(_agreementId);
-
-        emit AgreementCompleted(_agreementId);
+    // Update the status in the allRequest array
+    for (uint256 i = 0; i < allRequest.length; i++) {
+        if (allRequest[i].id == agreement.requestId) {
+            allRequest[i].status = RequestStatus.Completed;
+            break;
+        }
     }
 
-    function raiseDispute(uint256 _agreementId, string memory _reason) public {
-        Agreement storage agreement = agreements[_agreementId];
-        require(
-            msg.sender == agreement.provider ||
-                msg.sender == agreement.requester,
-            "Not authorized"
-        );
-        require(
-            agreement.status == AgreementStatus.Active,
-            "Agreement not active"
-        );
+    // Mint NFT for both parties
+    mintCompletionNFT(agreement.provider);
+    mintCompletionNFT(agreement.requester);
 
-        agreement.status = AgreementStatus.Disputed;
-        disputes[disputeCounter] = Dispute(
+    // Update reputations
+    updateReputation(agreement.provider, true);
+    updateReputation(agreement.requester, true);
+
+    // Release escrow if any
+    releaseEscrow(_agreementId);
+
+    emit AgreementCompleted(_agreementId);
+}
+
+function raiseDispute(uint256 _agreementId, string memory _reason) public {
+    Agreement storage agreement = agreements[_agreementId];
+    require(
+        msg.sender == agreement.provider ||
+            msg.sender == agreement.requester,
+        "Not authorized"
+    );
+    require(
+        agreement.status == AgreementStatus.Active,
+        "Agreement not active"
+    );
+
+    agreement.status = AgreementStatus.Disputed;
+
+    // Update the corresponding ServiceRequest status
+    ServiceRequest storage request = requests[agreement.requestId];
+    request.status = RequestStatus.Disputed;
+
+    // Update the status in the allRequest array
+    for (uint256 i = 0; i < allRequest.length; i++) {
+        if (allRequest[i].id == agreement.requestId) {
+            allRequest[i].status = RequestStatus.Disputed;
+            break;
+        }
+    }
+
+    disputes[disputeCounter] = Dispute(
+        _agreementId,
+        msg.sender,
+        _reason,
+        false,
+        false
+    );
+
+
+     allDisputes.push(Dispute(
             _agreementId,
             msg.sender,
             _reason,
             false,
             false
-        );
+        ));
 
-        emit DisputeRaised(disputeCounter, _agreementId, msg.sender);
-        disputeCounter++;
+    emit DisputeRaised(disputeCounter, _agreementId, msg.sender);
+    disputeCounter++;
+}
+
+function resolveDispute(
+    uint256 _disputeId,
+    bool _favorProvider
+) public onlyOwner {
+    Dispute storage dispute = disputes[_disputeId];
+    require(!dispute.resolved, "Dispute already resolved");
+
+    dispute.resolved = true;
+    dispute.favoredProvider = _favorProvider;
+
+    Agreement storage agreement = agreements[dispute.agreementId];
+    if (_favorProvider) {
+        updateReputation(agreement.provider, true);
+        updateReputation(agreement.requester, false);
+        agreement.status = AgreementStatus.Completed;
+    } else {
+        updateReputation(agreement.provider, false);
+        updateReputation(agreement.requester, true);
+        agreement.status = AgreementStatus.Canceled;
     }
 
-    function resolveDispute(
-        uint256 _disputeId,
-        bool _favorProvider
-    ) public onlyOwner {
-        Dispute storage dispute = disputes[_disputeId];
-        require(!dispute.resolved, "Dispute already resolved");
+    // Update the corresponding ServiceRequest status
+    ServiceRequest storage request = requests[agreement.requestId];
+    request.status = _favorProvider ? RequestStatus.Completed : RequestStatus.Rejected;
 
-        dispute.resolved = true;
-        dispute.favoredProvider = _favorProvider;
-
-        Agreement storage agreement = agreements[dispute.agreementId];
-        if (_favorProvider) {
-            updateReputation(agreement.provider, true);
-            updateReputation(agreement.requester, false);
-        } else {
-            updateReputation(agreement.provider, false);
-            updateReputation(agreement.requester, true);
+    // Update the status in the allRequest array
+    for (uint256 i = 0; i < allRequest.length; i++) {
+        if (allRequest[i].id == agreement.requestId) {
+            allRequest[i].status = _favorProvider ? RequestStatus.Completed : RequestStatus.Rejected;
+            break;
         }
-
-        emit DisputeResolved(_disputeId, _favorProvider);
     }
+
+    emit DisputeResolved(_disputeId, _favorProvider);
+}
 
     function mintCompletionNFT(address recipient) private {
         // _tokenIds.increment();
@@ -340,20 +387,26 @@ contract SkillExchange is Ownable /* , ERC721 */ {
         }
     }
 
-    function getAllListings() external view returns(SkillListing[]) {
-        require(msg.sender != address(0), "Not callable by address zero");
+    function getAllListings() external view returns (SkillListing[] memory) {
         return allListings;
     }
 
-
-    function getAllRequests() external view returns(ServiceRequest[]) {
-        require(msg.sender != address(0), "Not callable by address zero");
+    function getAllRequests() external view returns (ServiceRequest[] memory) {
         return allRequest;
     }
+    function getAllDisputes() external view returns (Dispute[] memory) {
+        return allDisputes;
+    }
 
-    function getUserReputation(
-        address user
-    ) public view returns (uint256 positive, uint256 negative, uint256 total) {
+    function getUserReputation(address user)
+        public
+        view
+        returns (
+            uint256 positive,
+            uint256 negative,
+            uint256 total
+        )
+    {
         UserReputation memory rep = userReputations[user];
         return (
             rep.positivePoints,
@@ -361,5 +414,4 @@ contract SkillExchange is Ownable /* , ERC721 */ {
             rep.positivePoints + rep.negativePoints
         );
     }
-    
 }
