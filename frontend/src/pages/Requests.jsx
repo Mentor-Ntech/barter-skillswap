@@ -1,287 +1,276 @@
 import { useState, useEffect } from "react";
-import { PlusCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import Badge from "../components/ui/Badge";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
-import useRequestService from "../hooks/useRequestService";
 import { ethers } from "ethers";
+import ABI from "../abis/SkillExchange.json";
+import { useAppKitAccount } from "@reown/appkit/react";
+import useSignerOrProvider from "../hooks/UseSignerOrProvider";
+import useRequestAccetDecline from "../hooks/useRequestAccetDecline";
 
-// RequestCard Component remains the same
-const RequestCard = ({ request }) => {
-  const statusColors = {
-    Open: "green",
-    "In Progress": "blue",
-    Completed: "gray",
-  };
-
-  return (
-    <Card>
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-xl font-semibold">{request.title}</h3>
-          <p className="text-gray-600">Request #{request.id}</p>
-        </div>
-        <Badge color={statusColors[request.status]}>{request.status}</Badge>
-      </div>
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <p className="text-sm text-gray-500">Requester</p>
-          <p className="font-semibold">{request.requester}</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Skill Required</p>
-          <p className="font-semibold">{request.skill}</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Budget (ETH)</p>
-          <p className="font-semibold">{request.budget} ETH</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Deadline</p>
-          <p className="font-semibold">{request.deadline}</p>
-        </div>
-      </div>
-      <div className="flex justify-end">
-        <Button variant="secondary">View Details</Button>
-      </div>
-    </Card>
-  );
-};
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    skill: "",
-    budget: 0,
-    deadline: "",
-    description: ""
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userRequests, setUserRequests] = useState([]);
+  const [showUserRequests, setShowUserRequests] = useState(false);
+  const { readOnlyProvider, signer } = useSignerOrProvider();
+  const { address } = useAppKitAccount();
+  const { acceptDeeclineService, loading, error } = useRequestAccetDecline();
+
+
+
+   const getStatusText = (statusNumber) => {
+    const statusMap = {
+      0: "Pending",
+      1: "Accepted", 
+      2: "Rejected",
+      3: "InProgress",
+      4: "Completed",
+      5: "Disputed"
+    };
+    return statusMap[statusNumber] || "Unknown";
+  };
+
   
-  const { requestService, loading, error } = useRequestService();
 
-  // Effect to load initial requests
-  useEffect(() => {
-    const initialRequests = [
-      {
-        id: 1,
-        title: "DApp Frontend Development",
-        requester: "0x1234...5678",
-        skill: "React Development",
-        budget: 0.5,
-        deadline: "2023-07-30",
-        status: "Open",
-      },
-      {
-        id: 2,
-        title: "Smart Contract Audit",
-        requester: "0xabcd...efgh",
-        skill: "Solidity",
-        budget: 0.3,
-        deadline: "2023-07-15",
-        status: "In Progress",
-      },
-      {
-        id: 3,
-        title: "Tokenomics Design",
-        requester: "0x2345...6789",
-        skill: "Token Economics",
-        budget: 0.2,
-        deadline: "2023-07-20",
-        status: "Completed",
-      },
-    ];
-    console.log("Loading initial requests:", initialRequests);
-    setRequests(initialRequests);
-  }, []);
+  const fetchRequestsAndListings = async () => {
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    const updatedValue = name === "budget" ? parseFloat(value) || 0 : value;
-    console.log(`Form field "${name}" updated:`, updatedValue);
-    setFormData(prev => ({
-      ...prev,
-      [name]: updatedValue
-    }));
-  };
+    console.log({readOnlyProvider});
 
-  const resetForm = () => {
-    console.log("Resetting form");
-    setFormData({
-      title: "",
-      skill: "",
-      budget: 0,
-      deadline: "",
-      description: ""
-    });
-    setShowModal(false);
-  };
+    if (!readOnlyProvider) {
+      console.log("Provider not available yet");
+      return;
+    }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    console.log("Submitting form data:", formData);
-
+    const contractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE;
     try {
-      const deadlineTimestamp = Math.floor(new Date(formData.deadline).getTime() / 1000);
-      console.log("Calculated deadline timestamp:", deadlineTimestamp);
+      const contract = new ethers.Contract(contractAddress, ABI, readOnlyProvider);
 
-      if (isNaN(deadlineTimestamp) || deadlineTimestamp <= Date.now() / 1000) {
-        toast.error("Invalid deadline. Please select a future date.");
-        return;
-      }
+      // Fetch all requests and listings
+      const allRequests = await contract.getAllRequests();
+      const allListings = await contract.getAllListings();
 
-      const ethValue = ethers.parseUnits(formData.budget.toString());
-      console.log("Calculated ETH value:", ethValue.toString());
+      console.log({allRequests});
+      console.log({allListings})
 
-      toast.info("Please confirm the transaction in MetaMask...");
+      // Format requests and include skill from listings
+      const formattedRequests = allRequests.map((request) => {
 
-      // Updated to match the new requestService signature
-      const txHash = await requestService(
-        formData.description,
-        deadlineTimestamp,
-        { value: ethValue }
-      );
+        console.log(request.status)
 
-      console.log("Transaction hash:", txHash);
+        // Find the corresponding listing for the request
+        const listing = allListings.find(
+          (listing) => Number(listing.id).toString() === Number(request.listingId).toString()
+        );
 
-      if (txHash) {
-        const signer = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const userAddress = signer[0];
-        console.log("User address:", userAddress);
-
-        const newRequest = {
-          id: requests.length + 1,
-          title: formData.title,
-          skill: formData.skill,
-          budget: formData.budget,
-          deadline: formData.deadline,
-          description: formData.description,
-          requester: `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`,
-          status: "Open",
-          transactionHash: txHash
+        return {
+          id: Number(request.id).toString(),
+          title: request.description, // Assuming description is used as the title
+          requester: request.requester,
+          skill: listing ? listing.skillName : "Unknown Skill", // Get skill from listing
+          deadline: new Date(Number(request.deadline) * 1000).toLocaleDateString(), // Convert timestamp to date
+          description: request.description,
+          status: getStatusText(Number(request.status))
+           
         };
+      });
 
-        console.log("Adding new request:", newRequest);
-        setRequests(prev => [...prev, newRequest]);
-        toast.success("Service request submitted successfully!");
-        resetForm();
+      setRequests(formattedRequests);
+
+      // Filter requests created by the user
+      if (address) {
+        const userRequests = formattedRequests.filter(
+          (request) => request.requester.toLowerCase() === address.toLowerCase()
+        );
+        setUserRequests(userRequests);
       }
     } catch (err) {
-      console.error("Error submitting request:", err);
-      toast.error(err.message || "Failed to submit request");
-    } finally {
-      setIsSubmitting(false);
+      console.error("Error fetching requests and listings:", err);
+      toast.error("Failed to fetch requests and listings");
     }
   };
-  // Rest of the JSX remains the same
+
+
+  const handleRequestAcceptDecline = async (requestId, status) => {
+
+
+console.log({status})
+    let requestStatus;
+
+    if(status === true) {
+      requestStatus = status;
+    }else {
+      requestStatus = status;
+    }
+
+
+    if (!signer) {
+
+      toast.error("Please connect your wallet");
+      return;
+    }
+    try {
+
+      
+      await acceptDeeclineService(requestId, requestStatus);
+
+      await fetchRequestsAndListings();
+
+      
+      toast.success("Error responding to request");
+      // setShowRequestModal(false);
+    } catch (err) {
+      console.error("Error responding to request:", err);
+      toast.error("Failed to respond to request");
+    }
+
+  };
+
+
+
+
+
+  useEffect(() => {
+    if (readOnlyProvider) {
+      fetchRequestsAndListings();
+    }
+  }, [readOnlyProvider, address]);
+
+  const toggleUserRequests = () => {
+    setShowUserRequests(!showUserRequests);
+  };
+
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Service Requests</h2>
-        <Button onClick={() => setShowModal(true)}>
-          <PlusCircle className="w-4 h-4 mr-2" />
-          Create New Request
-        </Button>
-      </div>
-
-      <div className="grid gap-6">
-        {requests.map((request) => (
-          <RequestCard key={request.id} request={request} />
-        ))}
-      </div>
-
-      {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <form onSubmit={handleSubmit} className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Create New Service Request</h3>
-              
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  name="title"
-                  placeholder="Title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  className="px-3 py-2 border rounded w-full"
-                  required
-                />
-                
-                <input
-                  type="text"
-                  name="skill"
-                  placeholder="Skill Required"
-                  value={formData.skill}
-                  onChange={handleInputChange}
-                  className="px-3 py-2 border rounded w-full"
-                  required
-                />
-                
-                <input
-                  type="number"
-                  name="budget"
-                  step="0.01"
-                  min="0"
-                  placeholder="Budget (ETH)"
-                  value={formData.budget}
-                  onChange={handleInputChange}
-                  className="px-3 py-2 border rounded w-full"
-                  required
-                />
-                
-                <input
-                  type="date"
-                  name="deadline"
-                  placeholder="Deadline"
-                  value={formData.deadline}
-                  onChange={handleInputChange}
-                  className="px-3 py-2 border rounded w-full"
-                  required
-                />
-                
-                <textarea
-                  name="description"
-                  placeholder="Description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  className="px-3 py-2 border rounded w-full"
-                  required
-                />
-              </div>
-
-              <div className="mt-6 space-y-2">
-                <Button 
-                  type="submit"
-                  className="w-full"
-                  disabled={isSubmitting || loading}
-                >
-                  {isSubmitting ? "Submitting..." : "Submit Request"}
-                </Button>
-                
-                <Button 
-                  type="button"
-                  variant="secondary"
-                  className="w-full"
-                  onClick={resetForm}
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-              </div>
-
-              {error && (
-                <p className="mt-2 text-red-500 text-sm">{error}</p>
-              )}
-            </form>
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-blue-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header Section */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 mb-8 shadow-lg">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Service Requests</h2>
+            <Button
+              onClick={toggleUserRequests}
+              className="w-full sm:w-auto bg-white text-blue-600 hover:bg-gray-100"
+            >
+              {showUserRequests ? "Show All Requests" : "Show My Requests"}
+            </Button>
           </div>
         </div>
-      )}
+
+        {/* Requests Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {(showUserRequests ? userRequests : requests).map((request) => (
+            <RequestCard handleRequestAcceptDecline={handleRequestAcceptDecline} key={request.id} request={request} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
 
+
+
 export default Requests;
+
+
+
+
+const RequestCard = ({ handleRequestAcceptDecline, request }) => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessingDecline, setIsProcessingDecline] = useState(false);
+
+  
+  const statusColors = {
+    Pending: "bg-yellow-100 text-yellow-800",
+    Accepted: "bg-green-100 text-green-800",
+    Rejected: "bg-red-100 text-red-800",
+    InProgress: "bg-blue-100 text-blue-800",
+    Completed: "bg-gray-100 text-gray-800",
+    Disputed: "bg-purple-100 text-purple-800"
+  };
+  
+  const handleAcceptAction = async (status) => {
+    setIsProcessing(true);
+    try {
+      await handleRequestAcceptDecline(request.id, status);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleDeleteAction = async (status) => {
+    setIsProcessingDecline(true);
+    try {
+      await handleRequestAcceptDecline(request.id, status);
+    } finally {
+      setIsProcessingDecline(false);
+    }
+  };
+
+  return (
+    <Card className="flex flex-col h-full transition-transform transform hover:scale-105 hover:shadow-lg border border-gray-200">
+    <div className="p-6 flex flex-col h-full">
+      {/* Card Header */}
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-xl font-bold text-gray-900 truncate">
+            {request.title}
+          </h3>
+          <p className="text-sm text-gray-500">Request #{request.id}</p>
+        </div>
+        <Badge className={`${statusColors[request.status]} px-3 py-1 text-sm font-semibold`}>
+          {request.status}
+        </Badge>
+      </div>
+
+      {/* Card Body */}
+      <div className="space-y-4 mb-6">
+        <div>
+          <p className="text-sm text-gray-500 font-medium">Skill Required</p>
+          <p className="text-sm text-gray-900 font-semibold">
+            {request.skill}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500 font-medium">Requester</p>
+          <p className="text-sm text-gray-900 font-semibold">
+            {request.requester}
+          </p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500 font-medium">Deadline</p>
+          <p className="text-sm text-gray-900 font-semibold">
+            {request.deadline}
+          </p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500 font-medium">Description</p>
+          <p className="text-sm text-gray-900 line-clamp-3">
+            {request.description}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-auto flex space-x-4">
+    <Button
+      onClick={() => handleAcceptAction(true)}
+      disabled={isProcessing || request.status !== "Pending"}
+      className="w-full bg-green-500 hover:bg-green-600 text-white disabled:opacity-50"
+    >
+      {isProcessing ? "Processing..." : "Accept"}
+    </Button>
+    <Button
+      onClick={() => handleDeleteAction(false)}
+      disabled={isProcessingDecline || request.status !== "Pending"}
+      className="w-full bg-red-500 hover:bg-red-600 text-white disabled:opacity-50"
+    >
+      {isProcessingDecline ? "Processing..." : "Decline"}
+    </Button>
+  </div>
+
+      
+    </div>
+  </Card>    
+  );
+};

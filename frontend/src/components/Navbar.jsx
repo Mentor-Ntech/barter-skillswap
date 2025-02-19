@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { FaWallet } from "react-icons/fa"
 import { HiMenuAlt4, HiX } from "react-icons/hi"
 import { useNavigate } from "react-router-dom"
 import useSignerOrProvider from "../hooks/UseSignerOrProvider"
 
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const {signer} = useSignerOrProvider();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,6 +48,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-8">
               <NavLinks />
               <appkit-button/>
+              {/* <button>hello</button> */}
             </div>
 
             {/* Mobile Menu Button */}

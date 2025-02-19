@@ -4,12 +4,15 @@ import { ethers } from "ethers"
 import { useAppKitAccount } from "@reown/appkit/react"
 import useSignerOrProvider from "./UseSignerOrProvider"
 import ABI from "../abis/SkillExchange.json"
+import useContract from "./useContract"
 
 const useListSkills = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const { address, isConnected } = useAppKitAccount()
   const { signer } = useSignerOrProvider()
+
+  const contract = useContract(true)
 
   const createListing = useCallback(
     async (skillName, description) => {
@@ -26,11 +29,24 @@ const useListSkills = () => {
       setLoading(true)
       setError(null)
 
-      const skillListingContractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE
-      try {
-        const contract = new ethers.Contract(skillListingContractAddress, ABI, signer)
 
-        const tx = await contract.createListing(skillName, description)
+
+
+      // const skillListingContractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE
+      try {
+        // const contract = new ethers.Contract(skillListingContractAddress, ABI, signer)
+
+
+        const estimatedGas = await contract.createListing.estimateGas(
+          skillName,
+          description
+        );
+
+
+        const tx = await contract.createListing(skillName, description, {
+          gasLimit: (estimatedGas * BigInt(120)) / BigInt(100),
+        }
+        )
 
         const receipt = await tx.wait()
 
