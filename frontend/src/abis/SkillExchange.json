@@ -526,6 +526,46 @@
 	},
 	{
 		"inputs": [],
+		"name": "getAllDisputes",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "agreementId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "initiator",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "reason",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "resolved",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "favoredProvider",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct SkillExchange.Dispute[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "getAllListings",
 		"outputs": [
 			{

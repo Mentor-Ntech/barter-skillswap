@@ -171,15 +171,10 @@ console.log({status})
 
 
 export default Requests;
-
-
-
-
 const RequestCard = ({ handleRequestAcceptDecline, request }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isProcessingDecline, setIsProcessingDecline] = useState(false);
 
-  
   const statusColors = {
     Pending: "bg-yellow-100 text-yellow-800",
     Accepted: "bg-green-100 text-green-800",
@@ -188,7 +183,7 @@ const RequestCard = ({ handleRequestAcceptDecline, request }) => {
     Completed: "bg-gray-100 text-gray-800",
     Disputed: "bg-purple-100 text-purple-800"
   };
-  
+
   const handleAcceptAction = async (status) => {
     setIsProcessing(true);
     try {
@@ -209,68 +204,69 @@ const RequestCard = ({ handleRequestAcceptDecline, request }) => {
 
   return (
     <Card className="flex flex-col h-full transition-transform transform hover:scale-105 hover:shadow-lg border border-gray-200">
-    <div className="p-6 flex flex-col h-full">
-      {/* Card Header */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex-1 min-w-0">
-          <h3 className="text-xl font-bold text-gray-900 truncate">
-            {request.title}
-          </h3>
-          <p className="text-sm text-gray-500">Request #{request.id}</p>
+      <div className="p-6 flex flex-col h-full">
+        {/* Card Header */}
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-xl font-bold text-gray-900 truncate">
+              {request.title}
+            </h3>
+            <p className="text-sm text-gray-500">Request #{request.id}</p>
+          </div>
+          <Badge className={`${statusColors[request.status]} px-3 py-1 text-sm font-semibold`}>
+            {request.status}
+          </Badge>
         </div>
-        <Badge className={`${statusColors[request.status]} px-3 py-1 text-sm font-semibold`}>
-          {request.status}
-        </Badge>
+
+        {/* Card Body */}
+        <div className="space-y-4 mb-6 flex-1">
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Skill Required</p>
+            <p className="text-sm text-gray-900 font-semibold truncate">
+              {request.skill}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Requester</p>
+            <p className="text-sm text-gray-900 font-semibold truncate">
+              {request.requester}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Deadline</p>
+            <p className="text-sm text-gray-900 font-semibold">
+              {request.deadline}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Description</p>
+            <p className="text-sm text-gray-900 line-clamp-3">
+              {request.description}
+            </p>
+          </div>
+        </div>
+
+        {/* Card Footer */}
+        <div className="mt-auto flex space-x-4">
+          <Button
+            onClick={() => handleAcceptAction(true)}
+            disabled={isProcessing || request.status !== "Pending"}
+            className="w-full bg-green-500 hover:bg-green-600 text-white disabled:opacity-50"
+          >
+            {isProcessing ? "Processing..." : "Accept"}
+          </Button>
+          <Button
+            onClick={() => handleDeleteAction(false)}
+            disabled={isProcessingDecline || request.status !== "Pending"}
+            className="w-full bg-red-500 hover:bg-red-600 text-white disabled:opacity-50"
+          >
+            {isProcessingDecline ? "Processing..." : "Decline"}
+          </Button>
+        </div>
       </div>
-
-      {/* Card Body */}
-      <div className="space-y-4 mb-6">
-        <div>
-          <p className="text-sm text-gray-500 font-medium">Skill Required</p>
-          <p className="text-sm text-gray-900 font-semibold">
-            {request.skill}
-          </p>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-500 font-medium">Requester</p>
-          <p className="text-sm text-gray-900 font-semibold">
-            {request.requester}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium">Deadline</p>
-          <p className="text-sm text-gray-900 font-semibold">
-            {request.deadline}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500 font-medium">Description</p>
-          <p className="text-sm text-gray-900 line-clamp-3">
-            {request.description}
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-auto flex space-x-4">
-    <Button
-      onClick={() => handleAcceptAction(true)}
-      disabled={isProcessing || request.status !== "Pending"}
-      className="w-full bg-green-500 hover:bg-green-600 text-white disabled:opacity-50"
-    >
-      {isProcessing ? "Processing..." : "Accept"}
-    </Button>
-    <Button
-      onClick={() => handleDeleteAction(false)}
-      disabled={isProcessingDecline || request.status !== "Pending"}
-      className="w-full bg-red-500 hover:bg-red-600 text-white disabled:opacity-50"
-    >
-      {isProcessingDecline ? "Processing..." : "Decline"}
-    </Button>
-  </div>
-
-      
-    </div>
-  </Card>    
+    </Card>
   );
 };
