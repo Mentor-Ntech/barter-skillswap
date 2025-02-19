@@ -124,7 +124,7 @@ contract SkillExchange is Ownable /* , ERC721 */ {
             _skillName,
             _description,
             true
-        ))
+        ));
         emit ListingCreated(listingCounter, msg.sender, _skillName);
         
     }
@@ -157,7 +157,7 @@ contract SkillExchange is Ownable /* , ERC721 */ {
         newRequest.listingId = _listingId;
         newRequest.description = _description;
         newRequest.status = RequestStatus.Pending;
-        newRequest.id = requestCounter
+        newRequest.id = requestCounter;
         newRequest.deadline = _deadline;
         
         requests[requestCounter] = newRequest;
