@@ -13,6 +13,7 @@ const useListSkills = () => {
   const { signer } = useSignerOrProvider()
 
   const contract = useContract(true)
+  // console.log({contract})
 
   const createListing = useCallback(
     async (skillName, description) => {
@@ -35,7 +36,7 @@ const useListSkills = () => {
       // const skillListingContractAddress = import.meta.env.VITE_APP_SKILL_EXCHANGE
       try {
         // const contract = new ethers.Contract(skillListingContractAddress, ABI, signer)
-
+        // console.log({contract})
 
         const estimatedGas = await contract.createListing.estimateGas(
           skillName,
@@ -65,7 +66,7 @@ const useListSkills = () => {
         setLoading(false)
       }
     },
-    [address, isConnected, signer],
+    [address, isConnected, signer, contract],
   )
 
   return { createListing, loading, error }

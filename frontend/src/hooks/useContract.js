@@ -6,7 +6,8 @@ import ABI from "../abis/SkillExchange.json";
 
 const useContract = (withSigner = false) => {
   const { signer, readOnlyProvider } = useSignerOrProvider();
-
+console.log({readOnlyProvider})
+console.log({signer})
   
   return useMemo(() => {
     try {
